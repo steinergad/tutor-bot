@@ -5,10 +5,53 @@ This script reads the homework PDFs from the algo.zip extraction folder
 and builds a structured homework.json database that the tutoring bot can use.
 
 Usage: python extract_homework.py
+
+⚠️ MATH EXTRACTION NOTE:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Current Limitation: PDF text extraction (pdfplumber/PyPDF2) extracts PLAIN TEXT,
+not mathematical notation. For example:
+  ❌ "T(n) = 2T(n/2) + O(n)" → "T(n) = 2T(n/2) + O(n)" (works by luck)
+  ❌ Equations with Greek letters → Often extracted as garbled text
+  ❌ Superscripts/subscripts → May be lost: "n²" → "n2" or "n^2"
+  ❌ Fraction notation → "/" might be missing: "n/2" is okay, but "⅓" → "1/3"
+
+Why? PDFs store math in multiple ways:
+  1. Embedded fonts (special encoding) - Need font mapping to decode
+  2. Rendering instructions (PDF operators) - Would need PDF parsing
+  3. SVG/images in PDF - Would need OCR to extract math
+  4. Actual text (rare) - pdfplumber can extract this
+
+Solutions (ranked by effort):
+
+  Option A (Easy): Accept current extraction, use LLM to "understand" context
+    - Pros: Works now, no dependencies, students can ask questions
+    - Cons: Some math might be garbled, students need to clarify
+    - Implementation: Current approach (leave as-is)
+
+  Option B (Medium): Add special math detection
+    - Use regex to detect math patterns like $...$, $$...$$, \(...\), etc.
+    - Feed patterns through OCR or manual LaTeX conversion
+    - Pros: Preserves mathematical structure
+    - Cons: OCR is separate dependency (pytesseract, easyocr)
+    - Implementation: See detect_math_regions() below
+
+  Option C (Hard): Use specialized PDF library
+    - pdfminer.six extracts structured text (preserves layout)
+    - pymupdf (fitz) has better math handling
+    - Pros: Better accuracy
+    - Cons: Heavy dependency, slower extraction
+    - Implementation: Replace pdfplumber with pymupdf
+
+Recommendation: Start with Option A (current). If students complain about
+garbled math, implement Option B (regex + manual correction).
+
+Future: Switch to Option C if building OCR-based system.
 """
 
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 import sys
@@ -17,6 +60,55 @@ import sys
 EXTRACTED_DIR = Path(r"C:\Users\stein\Downloads\algo_extracted")
 HW_DIR = EXTRACTED_DIR / "hw"
 OUTPUT_FILE = Path(__file__).parent / "db" / "homework.json"
+
+
+def detect_math_regions(text: str) -> list:
+    """
+    Detect potential mathematical expressions in text (Option B from docstring)
+    
+    Finds patterns like:
+      - $...$  or $$...$$ (LaTeX inline/block)
+      - \\(...\\) or \\[...\\] (LaTeX delimiters)
+      - Common math symbols: ≤ ≥ ≠ ≡ ∈ ∉ ∩ ∪ ⊆ ⊇ (Unicode)
+      - Superscript patterns: n² n^2 n**2
+      - Subscript patterns: a_i a[i]
+    
+    Returns: List of tuples (start_pos, end_pos, text, type)
+    
+    Usage:
+      math_regions = detect_math_regions(text)
+      for start, end, math_text, math_type in math_regions:
+          print(f"Found {math_type}: {math_text}")
+    """
+    regions = []
+    
+    # LaTeX inline: $...$
+    for match in re.finditer(r'\$([^$]+)\$', text):
+        regions.append((match.start(), match.end(), match.group(1), "latex_inline"))
+    
+    # LaTeX block: $$...$$
+    for match in re.finditer(r'\$\$(.+?)\$\$', text, re.DOTALL):
+        regions.append((match.start(), match.end(), match.group(1), "latex_block"))
+    
+    # Unicode math symbols
+    math_symbols = r'[≤≥≠≡∈∉∩∪⊆⊇±∓·÷×∞√∑∫∂∇]'
+    for match in re.finditer(f'.{{0,20}}{math_symbols}.{{0,20}}', text):
+        regions.append((match.start(), match.end(), match.group(), "unicode_math"))
+    
+    # Common patterns: n², n^2, a_i
+    patterns = [
+        (r'[a-zA-Z]\^[0-9]+', "superscript_caret"),  # x^2
+        (r'[a-zA-Z]_[a-zA-Z0-9]', "subscript_underscore"),  # a_i
+    ]
+    
+    for pattern, ptype in patterns:
+        for match in re.finditer(pattern, text):
+            regions.append((match.start(), match.end(), match.group(), ptype))
+    
+    # Sort by position
+    regions.sort(key=lambda x: x[0])
+    
+    return regions
 
 def extract_pdf_text(pdf_path: str) -> str:
     """Extract text from PDF using pdfplumber or PyPDF2"""
