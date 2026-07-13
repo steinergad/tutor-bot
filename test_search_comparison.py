@@ -164,36 +164,26 @@ class MetadataSearcher:
 
 
 class VectorDBSearcher:
-    """Search using vector embeddings (RAG method) - placeholder for future"""
+    """Search using vector embeddings (RAG method)"""
     
-    def __init__(self, metadata_path: str, chroma_dir: str = "db"):
-        self.metadata = json.loads(Path(metadata_path).read_text(encoding='utf-8'))
-        self.chroma_dir = Path(chroma_dir)
+    def __init__(self, metadata_path: str, chroma_dir: str = "db/chroma_vector_store"):
+        from vector_db import VectorDB
+        self.vdb = VectorDB(db_path=chroma_dir)
+        self.vdb.build_database(metadata_path)
         self.name = "Vector DB (RAG)"
-        # TODO: Initialize Chroma/vector DB client here
-        self.available = False
+        self.available = True
     
     def search(self, query: str) -> Dict[str, Any]:
         """
-        Vector DB search: Convert query to embedding, find similar content
+        Vector DB search: Convert query to embedding, find similar topics
         """
-        if not self.available:
-            return {
-                "error": "Vector DB not initialized yet",
-                "matched_topics": [],
-                "relevant_tutorials": [],
-                "latency_ms": None,
-                "method": "vector_db_search"
-            }
-        
-        # TODO: Implement actual vector search
-        start_time = time.time()
-        elapsed = time.time() - start_time
+        result = self.vdb.search(query, top_k=10, similarity_threshold=0.1)
         
         return {
-            "matched_topics": [],
-            "relevant_tutorials": [],
-            "latency_ms": elapsed * 1000,
+            "matched_topics": [topic for topic, score in result["topics"]],
+            "matched_scores": [score for topic, score in result["topics"]],
+            "relevant_tutorials": result["tutorial_ids"],
+            "latency_ms": result["latency_ms"],
             "method": "vector_db_search"
         }
 
