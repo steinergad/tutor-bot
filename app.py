@@ -12,6 +12,9 @@ from langchain_core.messages import AIMessage, HumanMessage
 # Vector DB integration
 from search_integration import init_search, find_relevant_topics, get_search_method
 
+# Prompt templates from /prompts directory
+from prompts.prompt_builder import build_tutorial_prompt, build_homework_prompt
+
 load_dotenv()
 
 PROVIDER  = os.getenv("LLM_PROVIDER", "openai").lower()
@@ -240,7 +243,7 @@ def get_llm():
 
 @st.cache_resource
 def build_chain(hw_id: str, topic_context: str, disp_name: str = "") -> dict:
-    """Builds LangChain pipeline using pre-indexed material from metadata.json"""
+    """Builds LangChain pipeline using prompts from /prompts directory and metadata.json"""
     from langchain_core.output_parsers import StrOutputParser
     from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
@@ -258,36 +261,16 @@ def build_chain(hw_id: str, topic_context: str, disp_name: str = "") -> dict:
     
     if topic_list:
         topics_formatted = "\n".join(f"  • {t}" for t in topic_list)
-        topic_gate = f"{topics_formatted}\n\n"
     else:
-        topic_gate = ""
+        topics_formatted = "  (foundational concepts)"
 
-    # Escape {{ }} so LangChain doesn't treat math notation like {1..k} as template vars
-    safe_topic = topic_context.replace("{", "{{").replace("}", "}}")
     tutorial_label = disp_name or hw_id.replace("_", " ").title()
 
-    topic_sec = f"\n{safe_topic}\n" if safe_topic.strip() else ""
-
-    sys_msg = (
-        f"You are a teacher for a student learning algorithms.\n\n"
-        f"The student has learned the following topics so far:\n\n"
-        + topic_gate
-        + f"Current topic: {tutorial_label}\n\n"
-        + "Guidelines:\n"
-        + "- Answer questions ONLY about the topics listed above.\n"
-        + "- If the student asks about something not covered yet, respond with:\n"
-        + "  'We haven't covered [topic name] in this course yet. Based on what we've studied so far, I can help you with: [suggest 2-3 related topics].'\n"
-        + "- Explain concepts clearly and help them learn.\n"
-        + "- Use examples from the course material to illustrate points.\n"
-        + "- Encourage understanding and thinking, not just memorization.\n"
-        + "- Be patient, supportive, and encouraging.\n\n"
-        + "Course material reference:\n"
-        + topic_sec
-        + "\n"
-        + "Format all math using Markdown/KaTeX:\n"
-        + "- Inline math: $O(n^2)$, $T(n) = 2T(n/2) + O(n)$\n"
-        + "- Block math: $$T(n) = aT(n/b) + f(n)$$\n"
-        + "Use only $...$ and $$...$$ delimiters.\n"
+    # Build system prompt from /prompts/tutorial_prompt.json
+    sys_msg = build_tutorial_prompt(
+        topics_list=topics_formatted,
+        tutorial_label=tutorial_label,
+        topic_context=topic_context
     )
 
     # Build the prompt template
@@ -304,7 +287,7 @@ def build_chain(hw_id: str, topic_context: str, disp_name: str = "") -> dict:
 
 @st.cache_resource
 def build_homework_chain(hw_key: str, topics_covered: list, week_num: int) -> dict:
-    """Builds LangChain pipeline for homework problem-solving (Socratic method)"""
+    """Builds LangChain pipeline for homework problem-solving using /prompts directory (Socratic method)"""
     from langchain_core.output_parsers import StrOutputParser
     from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
@@ -322,29 +305,16 @@ def build_homework_chain(hw_key: str, topics_covered: list, week_num: int) -> di
     concepts_str = "\n".join(f"  • {c}" for c in known_concepts) if known_concepts else "  (foundational concepts)"
     
     hw_title = hw_data.get("title", f"Homework {week_num}")
-    key_concepts = "\n".join(f"  • {c}" for c in hw_data.get("key_concepts", []))
+    hw_description = hw_data.get("description", "")
+    key_concepts_list = hw_data.get("key_concepts", [])
+    key_concepts = "\n".join(f"  • {c}" for c in key_concepts_list)
     
-    sys_msg = (
-        f"You are a Socratic tutor helping a student solve {hw_title}.\n\n"
-        f"The student has learned these concepts:\n{concepts_str}\n\n"
-        f"**Problem Context**: {hw_data.get('description', '')}\n\n"
-        f"**Key Concepts for This Assignment**:\n{key_concepts}\n\n"
-        f"**Your Role**: Guide the student toward the solution using Socratic questioning.\n"
-        f"- DO NOT give the answer directly\n"
-        f"- DO guide them step-by-step with hints and leading questions\n"
-        f"- DO encourage them to think about:\n"
-        f"  * What algorithm/technique applies here?\n"
-        f"  * What is the input and what should the output be?\n"
-        f"  * How can they break the problem into smaller parts?\n"
-        f"  * What data structures or patterns might help?\n"
-        f"- DO ask \"Can you explain why?\" when they make a claim\n"
-        f"- DO NOT reveal pseudocode or full solutions\n"
-        f"- When they're stuck, ask: \"What have we learned that might apply?\"\n"
-        f"- Celebrate progress: \"Good thinking! Now what about [next step]?\"\n\n"
-        f"Format all math using Markdown/KaTeX:\n"
-        f"- Inline math: $O(n^2)$, $T(n) = 2T(n/2) + O(n)$\n"
-        f"- Block math: $$T(n) = aT(n/b) + f(n)$$\n"
-        f"Use only $...$ and $$...$$ delimiters.\n"
+    # Build system prompt from /prompts/homework_prompt.json
+    sys_msg = build_homework_prompt(
+        concepts_list=concepts_str,
+        hw_title=hw_title,
+        hw_description=hw_description,
+        key_concepts=key_concepts
     )
     
     # Build the prompt template
