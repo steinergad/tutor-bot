@@ -132,7 +132,7 @@ class MetadataSearcher:
     """Search using metadata.json (baseline/simple method)"""
     
     def __init__(self, metadata_path: str):
-        self.metadata = json.loads(Path(metadata_path).read_text())
+        self.metadata = json.loads(Path(metadata_path).read_text(encoding='utf-8'))
         self.name = "Metadata Search"
     
     def search(self, query: str) -> Dict[str, Any]:
@@ -167,7 +167,7 @@ class VectorDBSearcher:
     """Search using vector embeddings (RAG method) - placeholder for future"""
     
     def __init__(self, metadata_path: str, chroma_dir: str = "db"):
-        self.metadata = json.loads(Path(metadata_path).read_text())
+        self.metadata = json.loads(Path(metadata_path).read_text(encoding='utf-8'))
         self.chroma_dir = Path(chroma_dir)
         self.name = "Vector DB (RAG)"
         # TODO: Initialize Chroma/vector DB client here

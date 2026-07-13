@@ -1,0 +1,632 @@
+{
+  "test_set_size": 15,
+  "test_questions": [
+    {
+      "id": "q1",
+      "question": "What is Big O notation?",
+      "expected_topics": [
+        "Big O notation",
+        "Asymptotic analysis"
+      ],
+      "tutorial": "tutorial_1",
+      "difficulty": "basic"
+    },
+    {
+      "id": "q2",
+      "question": "Explain the difference between O(n) and O(n\u00b2) complexity",
+      "expected_topics": [
+        "Asymptotic analysis",
+        "Time complexity"
+      ],
+      "tutorial": "tutorial_1",
+      "difficulty": "basic"
+    },
+    {
+      "id": "q3",
+      "question": "What is dynamic programming and when do you use it?",
+      "expected_topics": [
+        "Dynamic Programming",
+        "Overlapping subproblems"
+      ],
+      "tutorial": "tutorial_3",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "q4",
+      "question": "How does Dijkstra's algorithm work?",
+      "expected_topics": [
+        "Shortest paths",
+        "Graph algorithms"
+      ],
+      "tutorial": "tutorial_8",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "q5",
+      "question": "What is memoization?",
+      "expected_topics": [
+        "Dynamic Programming",
+        "Memoization"
+      ],
+      "tutorial": "tutorial_3",
+      "difficulty": "basic"
+    },
+    {
+      "id": "q6",
+      "question": "Explain greedy algorithms and when they work",
+      "expected_topics": [
+        "Greedy Algorithms",
+        "Greedy choice property"
+      ],
+      "tutorial": "tutorial_2",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "q7",
+      "question": "What is the master theorem?",
+      "expected_topics": [
+        "Divide-and-Conquer",
+        "Master Theorem"
+      ],
+      "tutorial": "tutorial_2",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "q8",
+      "question": "How do you analyze recursive algorithms?",
+      "expected_topics": [
+        "Recursion",
+        "Recurrence relations"
+      ],
+      "tutorial": "tutorial_1",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "q9",
+      "question": "What is a minimum spanning tree and how do you find one?",
+      "expected_topics": [
+        "Graph algorithms",
+        "MST algorithms"
+      ],
+      "tutorial": "tutorial_4",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "q10",
+      "question": "Explain the difference between BFS and DFS",
+      "expected_topics": [
+        "Graph traversal",
+        "Search algorithms"
+      ],
+      "tutorial": "tutorial_4",
+      "difficulty": "basic"
+    },
+    {
+      "id": "q11",
+      "question": "What is NP-completeness?",
+      "expected_topics": [
+        "NP-completeness",
+        "Computational complexity"
+      ],
+      "tutorial": "tutorial_5",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "q12",
+      "question": "How does quicksort work and what's its time complexity?",
+      "expected_topics": [
+        "Sorting algorithms",
+        "Divide-and-Conquer"
+      ],
+      "tutorial": "tutorial_2",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "q13",
+      "question": "What is maximum flow and how does it relate to minimum cut?",
+      "expected_topics": [
+        "Flow networks",
+        "Max flow"
+      ],
+      "tutorial": "tutorial_5",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "q14",
+      "question": "Explain polynomial time reduction",
+      "expected_topics": [
+        "Computational complexity",
+        "NP-completeness"
+      ],
+      "tutorial": "tutorial_5",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "q15",
+      "question": "What is backtracking and where is it used?",
+      "expected_topics": [
+        "Backtracking",
+        "Search algorithms"
+      ],
+      "tutorial": "tutorial_3",
+      "difficulty": "intermediate"
+    }
+  ],
+  "results": {
+    "Metadata Search": [
+      {
+        "question_id": "q1",
+        "question": "What is Big O notation?",
+        "difficulty": "basic",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "latency_ms": 0.0,
+        "found_topics": [
+          "finding the median of merged arrays",
+          "diameter of a tree",
+          "shortest path with a coupon",
+          "bellman-ford algorithm for shortest paths",
+          "zigzag shortest path",
+          "shortest paths",
+          "algorithm complexity",
+          "greedy algorithms",
+          "set cover approximation",
+          "dijkstra's algorithm for shortest paths",
+          "tile tiling problem",
+          "pseudo-code",
+          "the dining problem",
+          "dynamic programming",
+          "fibonacci sequence",
+          "proof techniques for algorithm correctness",
+          "shortest path with limited edge weights",
+          "algorithm correctness",
+          "algorithm description",
+          "majority element",
+          "binary matrix multiplication using apsp",
+          "introduction to algorithm design and analysis",
+          "topological sorting",
+          "edit distance",
+          "graph representation",
+          "shortest paths in directed weighted graphs",
+          "longest path in a directed acyclic graph (dag)",
+          "carpenter problem",
+          "complexity analysis",
+          "merge sort",
+          "fast exponentiation",
+          "proof techniques for greedy algorithms",
+          "game theory in graphs",
+          "counting paths in a dag",
+          "graph theory basics",
+          "using a specific edge in shortest paths",
+          "deterministic algorithms",
+          "longest increasing subsequence (lis)",
+          "optimization problems",
+          "coin change problem",
+          "closest pair problem",
+          "asymptotic notation",
+          "time complexity comparison",
+          "dynamic programming on trees",
+          "divide and conquer",
+          "maximum profit problem",
+          "minimum vertex cover on trees",
+          "shortest path",
+          "huffman coding",
+          "scheduling all intervals problem",
+          "optimization algorithms",
+          "stirling's approximation",
+          "decision algorithms"
+        ],
+        "expected_topics": [
+          "asymptotic analysis",
+          "big o notation"
+        ],
+        "matched_count": 0
+      },
+      {
+        "question_id": "q2",
+        "question": "Explain the difference between O(n) and O(n\u00b2) complexity",
+        "difficulty": "basic",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "latency_ms": 0.0,
+        "found_topics": [
+          "finding the median of merged arrays",
+          "divide and conquer",
+          "complexity analysis",
+          "algorithm complexity",
+          "game theory in graphs",
+          "graph theory basics",
+          "introduction to algorithm design and analysis",
+          "the dining problem",
+          "time complexity comparison"
+        ],
+        "expected_topics": [
+          "asymptotic analysis",
+          "time complexity"
+        ],
+        "matched_count": 0
+      },
+      {
+        "question_id": "q3",
+        "question": "What is dynamic programming and when do you use it?",
+        "difficulty": "intermediate",
+        "precision": 0.09090909090909091,
+        "recall": 0.5,
+        "f1": 0.15384615384615385,
+        "latency_ms": 3.576517105102539,
+        "found_topics": [
+          "dynamic programming on trees",
+          "divide and conquer",
+          "complexity analysis",
+          "time complexity comparison",
+          "dynamic programming",
+          "pseudo-code",
+          "deterministic algorithms",
+          "longest increasing subsequence (lis)",
+          "introduction to algorithm design and analysis",
+          "decision algorithms",
+          "edit distance"
+        ],
+        "expected_topics": [
+          "overlapping subproblems",
+          "dynamic programming"
+        ],
+        "matched_count": 1
+      },
+      {
+        "question_id": "q4",
+        "question": "How does Dijkstra's algorithm work?",
+        "difficulty": "intermediate",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "latency_ms": 0.0,
+        "found_topics": [
+          "optimization algorithms",
+          "proof techniques for algorithm correctness",
+          "bellman-ford algorithm for shortest paths",
+          "algorithm correctness",
+          "algorithm complexity",
+          "proof techniques for greedy algorithms",
+          "greedy algorithms",
+          "dijkstra's algorithm for shortest paths",
+          "algorithm description",
+          "deterministic algorithms",
+          "introduction to algorithm design and analysis",
+          "decision algorithms"
+        ],
+        "expected_topics": [
+          "shortest paths",
+          "graph algorithms"
+        ],
+        "matched_count": 0
+      },
+      {
+        "question_id": "q5",
+        "question": "What is memoization?",
+        "difficulty": "basic",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "latency_ms": 0.0,
+        "found_topics": [
+          "edit distance",
+          "complexity analysis",
+          "deterministic algorithms",
+          "longest increasing subsequence (lis)",
+          "introduction to algorithm design and analysis",
+          "decision algorithms",
+          "time complexity comparison"
+        ],
+        "expected_topics": [
+          "memoization",
+          "dynamic programming"
+        ],
+        "matched_count": 0
+      },
+      {
+        "question_id": "q6",
+        "question": "Explain greedy algorithms and when they work",
+        "difficulty": "intermediate",
+        "precision": 0.14285714285714285,
+        "recall": 0.5,
+        "f1": 0.22222222222222224,
+        "latency_ms": 0.0,
+        "found_topics": [
+          "optimization algorithms",
+          "divide and conquer",
+          "proof techniques for greedy algorithms",
+          "greedy algorithms",
+          "deterministic algorithms",
+          "introduction to algorithm design and analysis",
+          "decision algorithms"
+        ],
+        "expected_topics": [
+          "greedy algorithms",
+          "greedy choice property"
+        ],
+        "matched_count": 1
+      },
+      {
+        "question_id": "q7",
+        "question": "What is the master theorem?",
+        "difficulty": "advanced",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "latency_ms": 0.0,
+        "found_topics": [
+          "finding the median of merged arrays",
+          "edit distance",
+          "complexity analysis",
+          "game theory in graphs",
+          "graph theory basics",
+          "deterministic algorithms",
+          "longest increasing subsequence (lis)",
+          "introduction to algorithm design and analysis",
+          "the dining problem",
+          "decision algorithms",
+          "time complexity comparison"
+        ],
+        "expected_topics": [
+          "divide-and-conquer",
+          "master theorem"
+        ],
+        "matched_count": 0
+      },
+      {
+        "question_id": "q8",
+        "question": "How do you analyze recursive algorithms?",
+        "difficulty": "intermediate",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "latency_ms": 1.5194416046142578,
+        "found_topics": [
+          "pseudo-code"
+        ],
+        "expected_topics": [
+          "recurrence relations",
+          "recursion"
+        ],
+        "matched_count": 0
+      },
+      {
+        "question_id": "q9",
+        "question": "What is a minimum spanning tree and how do you find one?",
+        "difficulty": "intermediate",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "latency_ms": 0.0,
+        "found_topics": [
+          "finding the median of merged arrays",
+          "diameter of a tree",
+          "shortest path with a coupon",
+          "heaviest path in a grid",
+          "bellman-ford algorithm for shortest paths",
+          "shortest paths",
+          "zigzag shortest path",
+          "algorithm complexity",
+          "special cases in input",
+          "greedy algorithms",
+          "set cover approximation",
+          "dijkstra's algorithm for shortest paths",
+          "pseudo-code",
+          "dynamic programming",
+          "fibonacci sequence",
+          "proof techniques for algorithm correctness",
+          "shortest path with limited edge weights",
+          "algorithm correctness",
+          "directed acyclic graph (dag)",
+          "algorithm description",
+          "majority element",
+          "even length paths",
+          "binary matrix multiplication using apsp",
+          "introduction to algorithm design and analysis",
+          "topological sorting",
+          "edit distance",
+          "graph representation",
+          "shortest paths in directed weighted graphs",
+          "longest path in a directed acyclic graph (dag)",
+          "carpenter problem",
+          "complexity analysis",
+          "fast exponentiation",
+          "proof techniques for greedy algorithms",
+          "game theory in graphs",
+          "counting paths in a dag",
+          "graph theory basics",
+          "using a specific edge in shortest paths",
+          "deterministic algorithms",
+          "longest increasing subsequence (lis)",
+          "optimization problems",
+          "coin change problem",
+          "closest pair problem",
+          "asymptotic notation",
+          "dag",
+          "dynamic programming on trees",
+          "divide and conquer",
+          "time complexity comparison",
+          "maximum profit problem",
+          "minimum vertex cover on trees",
+          "breadth-first search (bfs)",
+          "shortest path",
+          "heaviest independent set in a path graph",
+          "huffman coding",
+          "layered graphs",
+          "scheduling all intervals problem",
+          "optimization algorithms",
+          "stirling's approximation",
+          "decision algorithms"
+        ],
+        "expected_topics": [
+          "mst algorithms",
+          "graph algorithms"
+        ],
+        "matched_count": 0
+      },
+      {
+        "question_id": "q10",
+        "question": "Explain the difference between BFS and DFS",
+        "difficulty": "basic",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "latency_ms": 0.0,
+        "found_topics": [
+          "finding the median of merged arrays",
+          "divide and conquer",
+          "breadth-first search (bfs)",
+          "game theory in graphs",
+          "graph theory basics",
+          "introduction to algorithm design and analysis",
+          "the dining problem"
+        ],
+        "expected_topics": [
+          "graph traversal",
+          "search algorithms"
+        ],
+        "matched_count": 0
+      },
+      {
+        "question_id": "q11",
+        "question": "What is NP-completeness?",
+        "difficulty": "advanced",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "latency_ms": 0.0,
+        "found_topics": [
+          "edit distance",
+          "complexity analysis",
+          "deterministic algorithms",
+          "longest increasing subsequence (lis)",
+          "introduction to algorithm design and analysis",
+          "decision algorithms",
+          "time complexity comparison"
+        ],
+        "expected_topics": [
+          "computational complexity",
+          "np-completeness"
+        ],
+        "matched_count": 0
+      },
+      {
+        "question_id": "q12",
+        "question": "How does quicksort work and what's its time complexity?",
+        "difficulty": "intermediate",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "latency_ms": 0.0,
+        "found_topics": [
+          "divide and conquer",
+          "introduction to algorithm design and analysis",
+          "time complexity comparison"
+        ],
+        "expected_topics": [
+          "sorting algorithms",
+          "divide-and-conquer"
+        ],
+        "matched_count": 0
+      },
+      {
+        "question_id": "q13",
+        "question": "What is maximum flow and how does it relate to minimum cut?",
+        "difficulty": "advanced",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "latency_ms": 0.0,
+        "found_topics": [
+          "shortest path with a coupon",
+          "bellman-ford algorithm for shortest paths",
+          "algorithm complexity",
+          "greedy algorithms",
+          "dijkstra's algorithm for shortest paths",
+          "proof techniques for algorithm correctness",
+          "shortest path with limited edge weights",
+          "algorithm correctness",
+          "algorithm description",
+          "majority element",
+          "topological sorting",
+          "introduction to algorithm design and analysis",
+          "edit distance",
+          "complexity analysis",
+          "proof techniques for greedy algorithms",
+          "deterministic algorithms",
+          "longest increasing subsequence (lis)",
+          "asymptotic notation",
+          "time complexity comparison",
+          "divide and conquer",
+          "maximum profit problem",
+          "minimum vertex cover on trees",
+          "optimization algorithms",
+          "decision algorithms"
+        ],
+        "expected_topics": [
+          "max flow",
+          "flow networks"
+        ],
+        "matched_count": 0
+      },
+      {
+        "question_id": "q14",
+        "question": "Explain polynomial time reduction",
+        "difficulty": "advanced",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "latency_ms": 0.0,
+        "found_topics": [
+          "time complexity comparison"
+        ],
+        "expected_topics": [
+          "computational complexity",
+          "np-completeness"
+        ],
+        "matched_count": 0
+      },
+      {
+        "question_id": "q15",
+        "question": "What is backtracking and where is it used?",
+        "difficulty": "intermediate",
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "latency_ms": 0.0,
+        "found_topics": [
+          "shortest path with a coupon",
+          "bellman-ford algorithm for shortest paths",
+          "algorithm complexity",
+          "greedy algorithms",
+          "dijkstra's algorithm for shortest paths",
+          "proof techniques for algorithm correctness",
+          "shortest path with limited edge weights",
+          "algorithm correctness",
+          "algorithm description",
+          "majority element",
+          "introduction to algorithm design and analysis",
+          "edit distance",
+          "complexity analysis",
+          "proof techniques for greedy algorithms",
+          "deterministic algorithms",
+          "longest increasing subsequence (lis)",
+          "time complexity comparison",
+          "divide and conquer",
+          "maximum profit problem",
+          "optimization algorithms",
+          "decision algorithms"
+        ],
+        "expected_topics": [
+          "search algorithms",
+          "backtracking"
+        ],
+        "matched_count": 0
+      }
+    ]
+  },
+  "timestamp": 1783939563.718525
+}
