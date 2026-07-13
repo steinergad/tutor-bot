@@ -1,0 +1,111 @@
+{
+  "hw_1": {
+    "week": 1,
+    "title": "Homework 1",
+    "problems": 4,
+    "description": "Introduction to algorithm analysis and complexity",
+    "topics": ["Big O notation", "Asymptotic analysis", "Time complexity"],
+    "problem_preview": "Problem 1: Given an array of n integers, analyze the time complexity of your sorting algorithm. Problem 2: Prove that f(n) = n² + 3n + 5 is O(n²).",
+    "key_concepts": [
+      "Asymptotic notation (Big O, Omega, Theta)",
+      "Analyzing algorithms empirically",
+      "Identifying growth rates",
+      "Proving complexity bounds"
+    ],
+    "hint_sequence": [
+      "Look at the dominant term in the function.",
+      "Which term grows fastest as n increases?",
+      "Can you find constants c and n₀ to satisfy the definition?",
+      "What's the relationship between your constants and the Big O notation?"
+    ]
+  },
+  "hw_2": {
+    "week": 2,
+    "title": "Homework 2",
+    "problems": 5,
+    "description": "Greedy algorithms and divide-and-conquer strategies",
+    "topics": ["Greedy algorithms", "Divide and conquer", "Activity selection", "Huffman coding"],
+    "problem_preview": "Problem 1: Design a greedy algorithm for activity selection. Problem 2: Prove the greedy choice property.",
+    "key_concepts": [
+      "Greedy choice property",
+      "Optimal substructure",
+      "Exchange argument",
+      "Correctness proofs",
+      "Divide and conquer paradigm"
+    ],
+    "hint_sequence": [
+      "Is there a property that makes a local choice globally optimal?",
+      "What happens when you pick the item with the earliest finish time?",
+      "Can you prove this choice leads to an optimal solution?",
+      "How would you construct the remaining solution after making the greedy choice?"
+    ]
+  },
+  "hw_3": {
+    "week": 3,
+    "title": "Homework 3",
+    "problems": 4,
+    "description": "Dynamic programming and recursion trees",
+    "topics": ["Dynamic programming", "Memoization", "Bottom-up DP", "Recursion trees"],
+    "problem_preview": "Problem 1: Solve a variant of matrix chain multiplication using DP. Problem 2: Analyze the recursion tree for fibonacci.",
+    "key_concepts": [
+      "Overlapping subproblems",
+      "Optimal substructure",
+      "Memoization vs tabulation",
+      "Recursion tree analysis",
+      "Time and space trade-offs"
+    ],
+    "hint_sequence": [
+      "What subproblems are you solving repeatedly?",
+      "How can you avoid recomputing the same subproblem?",
+      "What is the recurrence relation for this problem?",
+      "Can you draw the recursion tree and count the work at each level?",
+      "What pattern do you see in the tree structure?"
+    ]
+  },
+  "hw_4": {
+    "week": 4,
+    "title": "Homework 4",
+    "problems": 3,
+    "description": "Graph algorithms - shortest paths and minimum spanning trees",
+    "topics": ["Dijkstra's algorithm", "Bellman-Ford", "Floyd-Warshall", "MST", "Prim's", "Kruskal's"],
+    "problem_preview": "Problem 1: Implement Dijkstra's algorithm and prove correctness. Problem 2: Find the minimum spanning tree using Prim's algorithm.",
+    "key_concepts": [
+      "Shortest path algorithms",
+      "Negative cycles",
+      "All-pairs shortest paths",
+      "Minimum spanning trees",
+      "Union-find data structure",
+      "Greedy correctness for MST"
+    ],
+    "hint_sequence": [
+      "What property allows Dijkstra's to work correctly?",
+      "In what order should you process the vertices?",
+      "Why does the greedy choice (picking the nearest unvisited vertex) give the shortest path?",
+      "How can you adapt this algorithm for different graph structures?",
+      "What goes wrong if edges can have negative weights?"
+    ]
+  },
+  "hw_5": {
+    "week": 5,
+    "title": "Homework 5",
+    "problems": 4,
+    "description": "Advanced topics - flow networks, NP-completeness intro",
+    "topics": ["Max flow", "Min cut", "Network flow", "Ford-Fulkerson", "NP-completeness"],
+    "problem_preview": "Problem 1: Find the maximum flow in a network using Ford-Fulkerson. Problem 2: Prove a problem is NP-complete via reduction.",
+    "key_concepts": [
+      "Flow networks and capacities",
+      "Augmenting paths",
+      "Max-flow min-cut theorem",
+      "Residual networks",
+      "Polynomial vs NP-complete problems",
+      "Reduction techniques"
+    ],
+    "hint_sequence": [
+      "What is the maximum amount of flow that can go through each edge?",
+      "Can you find a path from source to sink where more flow can be pushed?",
+      "What happens when no more augmenting paths exist?",
+      "How does the value of the max flow relate to a cut?",
+      "Can you show the correspondence between your flow and a certificate of NP-completeness?"
+    ]
+  }
+}

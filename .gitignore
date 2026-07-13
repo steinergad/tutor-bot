@@ -1,4 +1,45 @@
+# Environment
 .env
-db/
+.venv/
+venv/
+ENV/
+
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/
+
+# Database/Cache
+db/tutorial_*/          # Chroma vector stores (auto-generated)
+db/hw1_os/              # Old vector store (auto-generated)
+db/*_backup.json        # Metadata backups (temp files)
+indexed_tutorials.json
+extracted_tutorials_preview.json
+
+# Temporary files
+*.log
+*.tmp
+*.zip
+deep_check.txt
+diagnose_report.txt
+full_fib_search.txt
+ingest_log.txt
+
+# Material (can be re-extracted from PDFs)
+material/
+raw_tutorial_texts/
