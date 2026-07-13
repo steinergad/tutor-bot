@@ -27,6 +27,7 @@ Thumbs.db
 # Database/Cache
 db/tutorial_*/          # Chroma vector stores (auto-generated)
 db/hw1_os/              # Old vector store (auto-generated)
+db/chroma_vector_store/ # New Chroma vector DB (auto-generated, ~50MB)
 db/*_backup.json        # Metadata backups (temp files)
 indexed_tutorials.json
 extracted_tutorials_preview.json
