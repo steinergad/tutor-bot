@@ -9,6 +9,9 @@ import streamlit as st
 from dotenv import load_dotenv
 from langchain_core.messages import AIMessage, HumanMessage
 
+# Vector DB integration
+from search_integration import init_search, find_relevant_topics, get_search_method
+
 load_dotenv()
 
 PROVIDER  = os.getenv("LLM_PROVIDER", "openai").lower()
@@ -246,6 +249,12 @@ def build_chain(hw_id: str, topic_context: str, disp_name: str = "") -> dict:
     # Load topic list from metadata for curriculum boundary enforcement
     _meta_now = json.loads(META_FILE.read_text(encoding="utf-8"))
     topic_list = _meta_now.get(hw_id, {}).get("topics", [])
+    
+    # Initialize vector DB for semantic search
+    try:
+        init_search(str(DB_DIR))
+    except:
+        pass  # Vector DB optional; falls back to keyword search
     
     if topic_list:
         topics_formatted = "\n".join(f"  • {t}" for t in topic_list)
@@ -570,11 +579,23 @@ if user_input := st.chat_input(placeholder):
     with st.chat_message("user", avatar="🧑‍🎓"):
         st.markdown(user_input)
 
-    # 2. Build appropriate chain based on mode
+    # 2. Use vector search to find related topics (enhances context)
+    enhanced_context = topic_ctx
+    if mode == "tutorial":
+        try:
+            related_topics = find_relevant_topics(user_input, top_k=3)
+            if related_topics:
+                related_names = [t[0] for t in related_topics if t[2] == selected_hw]  # Filter to current tutorial
+                if related_names:
+                    enhanced_context = topic_ctx + f"\n\n[Related topics from your question: {', '.join(related_names)}]"
+        except:
+            pass  # Vector search failed; use original context
+
+    # 3. Build appropriate chain based on mode
     if mode == "homework":
         parts        = build_homework_chain(selected_hw, [], week_num)
     else:
-        parts        = build_chain(selected_hw, topic_ctx, disp_name)
+        parts        = build_chain(selected_hw, enhanced_context, disp_name)
     
     llm          = parts["llm"]
     ans_prompt   = parts["answer_prompt"]
