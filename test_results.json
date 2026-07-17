@@ -163,63 +163,63 @@
         "f1": 0.0,
         "latency_ms": 0.0,
         "found_topics": [
-          "longest increasing subsequence (lis)",
-          "complexity analysis",
+          "shortest path with a coupon",
           "introduction to algorithm design and analysis",
-          "divide and conquer",
-          "proof techniques for greedy algorithms",
+          "longest path in a directed acyclic graph (dag)",
+          "shortest path",
           "pseudo-code",
           "the dining problem",
-          "topological sorting",
-          "bellman-ford algorithm for shortest paths",
-          "shortest paths",
-          "time complexity comparison",
-          "algorithm description",
-          "algorithm correctness",
-          "finding the median of merged arrays",
-          "dijkstra's algorithm for shortest paths",
-          "game theory in graphs",
+          "algorithm complexity",
+          "dynamic programming on trees",
+          "greedy algorithms",
+          "optimization algorithms",
           "deterministic algorithms",
-          "shortest path",
-          "asymptotic notation",
-          "majority element",
-          "shortest path with limited edge weights",
-          "graph theory basics",
-          "merge sort",
           "stirling's approximation",
+          "scheduling all intervals problem",
+          "graph representation",
+          "shortest paths",
           "carpenter problem",
+          "fast exponentiation",
+          "proof techniques for algorithm correctness",
+          "merge sort",
+          "zigzag shortest path",
+          "majority element",
+          "using a specific edge in shortest paths",
+          "time complexity comparison",
+          "closest pair problem",
+          "fibonacci sequence",
+          "coin change problem",
           "huffman coding",
+          "graph theory basics",
+          "shortest path with limited edge weights",
+          "diameter of a tree",
+          "longest increasing subsequence (lis)",
+          "topological sorting",
+          "game theory in graphs",
+          "maximum profit problem",
+          "proof techniques for greedy algorithms",
+          "divide and conquer",
+          "shortest paths in directed weighted graphs",
+          "dijkstra's algorithm for shortest paths",
+          "asymptotic notation",
+          "dynamic programming",
+          "counting paths in a dag",
+          "bellman-ford algorithm for shortest paths",
+          "binary matrix multiplication using apsp",
+          "complexity analysis",
+          "algorithm description",
+          "optimization problems",
+          "minimum vertex cover on trees",
+          "edit distance",
+          "algorithm correctness",
           "tile tiling problem",
           "decision algorithms",
-          "maximum profit problem",
-          "greedy algorithms",
-          "shortest paths in directed weighted graphs",
-          "closest pair problem",
-          "set cover approximation",
-          "fast exponentiation",
-          "zigzag shortest path",
-          "dynamic programming on trees",
-          "scheduling all intervals problem",
-          "dynamic programming",
-          "optimization problems",
-          "optimization algorithms",
-          "fibonacci sequence",
-          "edit distance",
-          "graph representation",
-          "shortest path with a coupon",
-          "algorithm complexity",
-          "minimum vertex cover on trees",
-          "diameter of a tree",
-          "counting paths in a dag",
-          "longest path in a directed acyclic graph (dag)",
-          "proof techniques for algorithm correctness",
-          "using a specific edge in shortest paths",
-          "coin change problem",
-          "binary matrix multiplication using apsp"
+          "finding the median of merged arrays",
+          "set cover approximation"
         ],
         "expected_topics": [
-          "big o notation",
-          "asymptotic analysis"
+          "asymptotic analysis",
+          "big o notation"
         ],
         "matched_count": 0
       },
@@ -232,19 +232,19 @@
         "f1": 0.0,
         "latency_ms": 0.0,
         "found_topics": [
-          "complexity analysis",
+          "time complexity comparison",
           "introduction to algorithm design and analysis",
-          "finding the median of merged arrays",
-          "divide and conquer",
-          "game theory in graphs",
-          "algorithm complexity",
           "the dining problem",
+          "complexity analysis",
+          "algorithm complexity",
           "graph theory basics",
-          "time complexity comparison"
+          "game theory in graphs",
+          "finding the median of merged arrays",
+          "divide and conquer"
         ],
         "expected_topics": [
-          "asymptotic analysis",
-          "time complexity"
+          "time complexity",
+          "asymptotic analysis"
         ],
         "matched_count": 0
       },
@@ -255,19 +255,19 @@
         "precision": 0.09090909090909091,
         "recall": 0.5,
         "f1": 0.15384615384615385,
-        "latency_ms": 2.0072460174560547,
+        "latency_ms": 0.0,
         "found_topics": [
-          "decision algorithms",
-          "longest increasing subsequence (lis)",
-          "complexity analysis",
-          "introduction to algorithm design and analysis",
-          "divide and conquer",
-          "dynamic programming on trees",
-          "deterministic algorithms",
-          "dynamic programming",
-          "pseudo-code",
           "time complexity comparison",
-          "edit distance"
+          "introduction to algorithm design and analysis",
+          "deterministic algorithms",
+          "pseudo-code",
+          "dynamic programming",
+          "complexity analysis",
+          "decision algorithms",
+          "edit distance",
+          "longest increasing subsequence (lis)",
+          "dynamic programming on trees",
+          "divide and conquer"
         ],
         "expected_topics": [
           "dynamic programming",
@@ -284,22 +284,22 @@
         "f1": 0.0,
         "latency_ms": 0.0,
         "found_topics": [
-          "decision algorithms",
-          "introduction to algorithm design and analysis",
-          "greedy algorithms",
-          "algorithm correctness",
           "dijkstra's algorithm for shortest paths",
-          "algorithm complexity",
-          "proof techniques for greedy algorithms",
+          "introduction to algorithm design and analysis",
           "deterministic algorithms",
           "bellman-ford algorithm for shortest paths",
-          "proof techniques for algorithm correctness",
           "optimization algorithms",
-          "algorithm description"
+          "algorithm description",
+          "algorithm complexity",
+          "decision algorithms",
+          "algorithm correctness",
+          "greedy algorithms",
+          "proof techniques for greedy algorithms",
+          "proof techniques for algorithm correctness"
         ],
         "expected_topics": [
-          "shortest paths",
-          "graph algorithms"
+          "graph algorithms",
+          "shortest paths"
         ],
         "matched_count": 0
       },
@@ -310,15 +310,15 @@
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0,
-        "latency_ms": 2.008676528930664,
+        "latency_ms": 0.0,
         "found_topics": [
-          "decision algorithms",
-          "longest increasing subsequence (lis)",
-          "complexity analysis",
+          "time complexity comparison",
           "introduction to algorithm design and analysis",
           "deterministic algorithms",
-          "time complexity comparison",
-          "edit distance"
+          "complexity analysis",
+          "decision algorithms",
+          "edit distance",
+          "longest increasing subsequence (lis)"
         ],
         "expected_topics": [
           "dynamic programming",
@@ -335,17 +335,17 @@
         "f1": 0.22222222222222224,
         "latency_ms": 0.0,
         "found_topics": [
-          "decision algorithms",
           "introduction to algorithm design and analysis",
-          "greedy algorithms",
-          "divide and conquer",
-          "proof techniques for greedy algorithms",
           "deterministic algorithms",
-          "optimization algorithms"
+          "optimization algorithms",
+          "decision algorithms",
+          "greedy algorithms",
+          "proof techniques for greedy algorithms",
+          "divide and conquer"
         ],
         "expected_topics": [
-          "greedy choice property",
-          "greedy algorithms"
+          "greedy algorithms",
+          "greedy choice property"
         ],
         "matched_count": 1
       },
@@ -358,21 +358,21 @@
         "f1": 0.0,
         "latency_ms": 0.0,
         "found_topics": [
-          "decision algorithms",
-          "longest increasing subsequence (lis)",
-          "complexity analysis",
+          "time complexity comparison",
           "introduction to algorithm design and analysis",
-          "finding the median of merged arrays",
-          "game theory in graphs",
           "deterministic algorithms",
           "the dining problem",
+          "complexity analysis",
+          "decision algorithms",
           "graph theory basics",
-          "time complexity comparison",
-          "edit distance"
+          "edit distance",
+          "longest increasing subsequence (lis)",
+          "game theory in graphs",
+          "finding the median of merged arrays"
         ],
         "expected_topics": [
-          "master theorem",
-          "divide-and-conquer"
+          "divide-and-conquer",
+          "master theorem"
         ],
         "matched_count": 0
       },
@@ -388,8 +388,8 @@
           "pseudo-code"
         ],
         "expected_topics": [
-          "recurrence relations",
-          "recursion"
+          "recursion",
+          "recurrence relations"
         ],
         "matched_count": 0
       },
@@ -400,66 +400,66 @@
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0,
-        "latency_ms": 2.0074844360351562,
+        "latency_ms": 2.005338668823242,
         "found_topics": [
-          "longest increasing subsequence (lis)",
-          "complexity analysis",
           "heaviest path in a grid",
           "introduction to algorithm design and analysis",
-          "divide and conquer",
-          "proof techniques for greedy algorithms",
-          "pseudo-code",
-          "topological sorting",
-          "bellman-ford algorithm for shortest paths",
-          "shortest paths",
-          "time complexity comparison",
-          "algorithm description",
-          "algorithm correctness",
-          "finding the median of merged arrays",
-          "dijkstra's algorithm for shortest paths",
-          "game theory in graphs",
-          "deterministic algorithms",
-          "shortest path",
-          "asymptotic notation",
-          "majority element",
-          "shortest path with limited edge weights",
-          "graph theory basics",
-          "breadth-first search (bfs)",
-          "stirling's approximation",
-          "carpenter problem",
-          "huffman coding",
-          "decision algorithms",
-          "layered graphs",
-          "special cases in input",
-          "maximum profit problem",
-          "greedy algorithms",
-          "shortest paths in directed weighted graphs",
-          "closest pair problem",
-          "set cover approximation",
-          "fast exponentiation",
-          "zigzag shortest path",
-          "dynamic programming on trees",
-          "scheduling all intervals problem",
-          "dag",
-          "dynamic programming",
-          "heaviest independent set in a path graph",
-          "optimization problems",
-          "even length paths",
-          "optimization algorithms",
-          "fibonacci sequence",
-          "edit distance",
-          "graph representation",
-          "shortest path with a coupon",
-          "algorithm complexity",
-          "minimum vertex cover on trees",
-          "diameter of a tree",
-          "directed acyclic graph (dag)",
-          "counting paths in a dag",
           "longest path in a directed acyclic graph (dag)",
+          "shortest path with a coupon",
+          "shortest path",
+          "pseudo-code",
+          "layered graphs",
+          "algorithm complexity",
+          "dag",
+          "set cover approximation",
+          "directed acyclic graph (dag)",
+          "dynamic programming on trees",
+          "greedy algorithms",
+          "optimization algorithms",
+          "deterministic algorithms",
+          "stirling's approximation",
+          "scheduling all intervals problem",
+          "graph representation",
+          "shortest paths",
+          "carpenter problem",
+          "fast exponentiation",
           "proof techniques for algorithm correctness",
+          "special cases in input",
+          "zigzag shortest path",
+          "majority element",
           "using a specific edge in shortest paths",
+          "time complexity comparison",
+          "closest pair problem",
+          "fibonacci sequence",
           "coin change problem",
-          "binary matrix multiplication using apsp"
+          "huffman coding",
+          "graph theory basics",
+          "shortest path with limited edge weights",
+          "diameter of a tree",
+          "longest increasing subsequence (lis)",
+          "even length paths",
+          "game theory in graphs",
+          "maximum profit problem",
+          "topological sorting",
+          "proof techniques for greedy algorithms",
+          "divide and conquer",
+          "shortest paths in directed weighted graphs",
+          "dijkstra's algorithm for shortest paths",
+          "asymptotic notation",
+          "dynamic programming",
+          "counting paths in a dag",
+          "breadth-first search (bfs)",
+          "bellman-ford algorithm for shortest paths",
+          "binary matrix multiplication using apsp",
+          "complexity analysis",
+          "algorithm description",
+          "optimization problems",
+          "minimum vertex cover on trees",
+          "edit distance",
+          "algorithm correctness",
+          "decision algorithms",
+          "finding the median of merged arrays",
+          "heaviest independent set in a path graph"
         ],
         "expected_topics": [
           "mst algorithms",
@@ -474,15 +474,15 @@
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0,
-        "latency_ms": 0.0,
+        "latency_ms": 2.0055770874023438,
         "found_topics": [
           "introduction to algorithm design and analysis",
-          "finding the median of merged arrays",
-          "divide and conquer",
-          "game theory in graphs",
           "the dining problem",
+          "breadth-first search (bfs)",
           "graph theory basics",
-          "breadth-first search (bfs)"
+          "game theory in graphs",
+          "finding the median of merged arrays",
+          "divide and conquer"
         ],
         "expected_topics": [
           "graph traversal",
@@ -499,13 +499,13 @@
         "f1": 0.0,
         "latency_ms": 0.0,
         "found_topics": [
-          "decision algorithms",
-          "longest increasing subsequence (lis)",
-          "complexity analysis",
+          "time complexity comparison",
           "introduction to algorithm design and analysis",
           "deterministic algorithms",
-          "time complexity comparison",
-          "edit distance"
+          "complexity analysis",
+          "decision algorithms",
+          "edit distance",
+          "longest increasing subsequence (lis)"
         ],
         "expected_topics": [
           "np-completeness",
@@ -520,15 +520,15 @@
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0,
-        "latency_ms": 2.007007598876953,
+        "latency_ms": 2.006053924560547,
         "found_topics": [
-          "divide and conquer",
+          "time complexity comparison",
           "introduction to algorithm design and analysis",
-          "time complexity comparison"
+          "divide and conquer"
         ],
         "expected_topics": [
-          "divide-and-conquer",
-          "sorting algorithms"
+          "sorting algorithms",
+          "divide-and-conquer"
         ],
         "matched_count": 0
       },
@@ -539,32 +539,32 @@
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0,
-        "latency_ms": 0.0,
+        "latency_ms": 2.0096302032470703,
         "found_topics": [
-          "longest increasing subsequence (lis)",
-          "complexity analysis",
+          "shortest path with a coupon",
           "introduction to algorithm design and analysis",
-          "divide and conquer",
-          "proof techniques for greedy algorithms",
-          "topological sorting",
-          "bellman-ford algorithm for shortest paths",
-          "time complexity comparison",
-          "algorithm description",
-          "algorithm correctness",
-          "dijkstra's algorithm for shortest paths",
-          "deterministic algorithms",
-          "asymptotic notation",
-          "majority element",
-          "shortest path with limited edge weights",
-          "decision algorithms",
-          "maximum profit problem",
+          "algorithm complexity",
           "greedy algorithms",
           "optimization algorithms",
-          "edit distance",
-          "shortest path with a coupon",
-          "algorithm complexity",
+          "deterministic algorithms",
+          "proof techniques for algorithm correctness",
+          "majority element",
+          "time complexity comparison",
+          "shortest path with limited edge weights",
+          "longest increasing subsequence (lis)",
+          "topological sorting",
+          "maximum profit problem",
+          "proof techniques for greedy algorithms",
+          "divide and conquer",
+          "asymptotic notation",
+          "dijkstra's algorithm for shortest paths",
+          "bellman-ford algorithm for shortest paths",
+          "complexity analysis",
+          "algorithm description",
+          "decision algorithms",
           "minimum vertex cover on trees",
-          "proof techniques for algorithm correctness"
+          "edit distance",
+          "algorithm correctness"
         ],
         "expected_topics": [
           "max flow",
@@ -579,7 +579,7 @@
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0,
-        "latency_ms": 2.0072460174560547,
+        "latency_ms": 0.0,
         "found_topics": [
           "time complexity comparison"
         ],
@@ -596,33 +596,33 @@
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0,
-        "latency_ms": 2.004384994506836,
+        "latency_ms": 0.0,
         "found_topics": [
-          "longest increasing subsequence (lis)",
-          "complexity analysis",
+          "shortest path with a coupon",
           "introduction to algorithm design and analysis",
-          "divide and conquer",
-          "proof techniques for greedy algorithms",
-          "bellman-ford algorithm for shortest paths",
-          "time complexity comparison",
-          "algorithm description",
-          "algorithm correctness",
-          "dijkstra's algorithm for shortest paths",
-          "deterministic algorithms",
-          "majority element",
-          "shortest path with limited edge weights",
-          "decision algorithms",
-          "maximum profit problem",
+          "algorithm complexity",
           "greedy algorithms",
           "optimization algorithms",
+          "deterministic algorithms",
+          "proof techniques for algorithm correctness",
+          "majority element",
+          "time complexity comparison",
+          "shortest path with limited edge weights",
+          "longest increasing subsequence (lis)",
+          "maximum profit problem",
+          "proof techniques for greedy algorithms",
+          "divide and conquer",
+          "dijkstra's algorithm for shortest paths",
+          "bellman-ford algorithm for shortest paths",
+          "complexity analysis",
+          "algorithm description",
+          "decision algorithms",
           "edit distance",
-          "shortest path with a coupon",
-          "algorithm complexity",
-          "proof techniques for algorithm correctness"
+          "algorithm correctness"
         ],
         "expected_topics": [
-          "search algorithms",
-          "backtracking"
+          "backtracking",
+          "search algorithms"
         ],
         "matched_count": 0
       }
@@ -635,15 +635,15 @@
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0,
-        "latency_ms": 18.66769790649414,
+        "latency_ms": 56.33401870727539,
         "found_topics": [
-          "asymptotic notation",
+          "time complexity comparison",
           "algorithm complexity",
-          "time complexity comparison"
+          "asymptotic notation"
         ],
         "expected_topics": [
-          "big o notation",
-          "asymptotic analysis"
+          "asymptotic analysis",
+          "big o notation"
         ],
         "matched_count": 0
       },
@@ -654,16 +654,16 @@
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0,
-        "latency_ms": 12.190580368041992,
+        "latency_ms": 26.110410690307617,
         "found_topics": [
-          "asymptotic notation",
-          "algorithm complexity",
+          "time complexity comparison",
           "complexity analysis",
-          "time complexity comparison"
+          "algorithm complexity",
+          "asymptotic notation"
         ],
         "expected_topics": [
-          "asymptotic analysis",
-          "time complexity"
+          "time complexity",
+          "asymptotic analysis"
         ],
         "matched_count": 0
       },
@@ -674,17 +674,17 @@
         "precision": 0.1111111111111111,
         "recall": 0.5,
         "f1": 0.1818181818181818,
-        "latency_ms": 16.076326370239258,
+        "latency_ms": 24.40953254699707,
         "found_topics": [
-          "decision algorithms",
-          "special cases in input",
-          "algorithm correctness",
-          "divide and conquer",
           "deterministic algorithms",
-          "dynamic programming",
-          "optimization algorithms",
           "pseudo-code",
-          "algorithm description"
+          "dynamic programming",
+          "algorithm description",
+          "decision algorithms",
+          "optimization algorithms",
+          "algorithm correctness",
+          "special cases in input",
+          "divide and conquer"
         ],
         "expected_topics": [
           "dynamic programming",
@@ -699,22 +699,22 @@
         "precision": 0.1,
         "recall": 0.5,
         "f1": 0.16666666666666669,
-        "latency_ms": 14.064550399780273,
+        "latency_ms": 22.08542823791504,
         "found_topics": [
-          "introduction to algorithm design and analysis",
-          "algorithm correctness",
           "dijkstra's algorithm for shortest paths",
-          "divide and conquer",
-          "algorithm complexity",
+          "introduction to algorithm design and analysis",
           "deterministic algorithms",
           "shortest path",
+          "algorithm complexity",
+          "algorithm description",
           "shortest paths",
           "optimization algorithms",
-          "algorithm description"
+          "algorithm correctness",
+          "divide and conquer"
         ],
         "expected_topics": [
-          "shortest paths",
-          "graph algorithms"
+          "graph algorithms",
+          "shortest paths"
         ],
         "matched_count": 1
       },
@@ -725,17 +725,17 @@
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0,
-        "latency_ms": 14.324426651000977,
+        "latency_ms": 26.404619216918945,
         "found_topics": [
-          "longest increasing subsequence (lis)",
-          "edit distance",
-          "complexity analysis",
-          "divide and conquer",
-          "fast exponentiation",
-          "algorithm complexity",
-          "merge sort",
           "time complexity comparison",
-          "algorithm description"
+          "complexity analysis",
+          "algorithm description",
+          "algorithm complexity",
+          "edit distance",
+          "longest increasing subsequence (lis)",
+          "fast exponentiation",
+          "merge sort",
+          "divide and conquer"
         ],
         "expected_topics": [
           "dynamic programming",
@@ -750,22 +750,22 @@
         "precision": 0.1,
         "recall": 0.5,
         "f1": 0.16666666666666669,
-        "latency_ms": 14.041900634765625,
+        "latency_ms": 20.08056640625,
         "found_topics": [
-          "decision algorithms",
-          "special cases in input",
-          "introduction to algorithm design and analysis",
-          "algorithm correctness",
-          "greedy algorithms",
-          "divide and conquer",
-          "algorithm complexity",
-          "proof techniques for greedy algorithms",
           "deterministic algorithms",
-          "algorithm description"
+          "introduction to algorithm design and analysis",
+          "proof techniques for greedy algorithms",
+          "algorithm description",
+          "algorithm complexity",
+          "decision algorithms",
+          "greedy algorithms",
+          "algorithm correctness",
+          "special cases in input",
+          "divide and conquer"
         ],
         "expected_topics": [
-          "greedy choice property",
-          "greedy algorithms"
+          "greedy algorithms",
+          "greedy choice property"
         ],
         "matched_count": 1
       },
@@ -776,16 +776,16 @@
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0,
-        "latency_ms": 12.029886245727539,
+        "latency_ms": 16.30568504333496,
         "found_topics": [
-          "stirling's approximation",
           "asymptotic notation",
-          "algorithm complexity",
-          "deterministic algorithms"
+          "deterministic algorithms",
+          "stirling's approximation",
+          "algorithm complexity"
         ],
         "expected_topics": [
-          "master theorem",
-          "divide-and-conquer"
+          "divide-and-conquer",
+          "master theorem"
         ],
         "matched_count": 0
       },
@@ -796,18 +796,18 @@
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0,
-        "latency_ms": 12.047052383422852,
+        "latency_ms": 22.068500518798828,
         "found_topics": [
-          "special cases in input",
-          "complexity analysis",
-          "algorithm complexity",
-          "deterministic algorithms",
           "time complexity comparison",
-          "algorithm description"
+          "deterministic algorithms",
+          "complexity analysis",
+          "algorithm description",
+          "algorithm complexity",
+          "special cases in input"
         ],
         "expected_topics": [
-          "recurrence relations",
-          "recursion"
+          "recursion",
+          "recurrence relations"
         ],
         "matched_count": 0
       },
@@ -818,18 +818,18 @@
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0,
-        "latency_ms": 16.63064956665039,
+        "latency_ms": 24.213552474975586,
         "found_topics": [
-          "special cases in input",
-          "\u05e2\u05e5 \u05e4\u05d5\u05e8\u05e9 \u05de\u05d9\u05e0\u05d9\u05de\u05dc\u05d9",
           "introduction to algorithm design and analysis",
-          "algorithm complexity",
-          "\u05ea\u05db\u05d5\u05e0\u05ea \u05d4\u05d7\u05ea\u05da \u05dc\u05e2\u05e6\u05d9\u05dd \u05e4\u05d5\u05e8\u05e9\u05d9\u05dd \u05de\u05d9\u05e0\u05d9\u05de\u05dc\u05d9\u05d9\u05dd",
-          "diameter of a tree",
-          "\u05ea\u05db\u05d5\u05e0\u05ea \u05d4\u05de\u05e2\u05d2\u05dc \u05dc\u05e2\u05e6\u05d9\u05dd \u05e4\u05d5\u05e8\u05e9\u05d9\u05dd \u05de\u05d9\u05e0\u05d9\u05de\u05dc\u05d9\u05d9\u05dd",
-          "even length paths",
           "\u05e2\u05e6\u05d9\u05dd \u05e4\u05d5\u05e8\u05e9\u05d9\u05dd \u05de\u05d9\u05e0\u05d9\u05de\u05dc\u05d9\u05d9\u05dd",
-          "algorithm description"
+          "algorithm description",
+          "algorithm complexity",
+          "diameter of a tree",
+          "\u05ea\u05db\u05d5\u05e0\u05ea \u05d4\u05d7\u05ea\u05da \u05dc\u05e2\u05e6\u05d9\u05dd \u05e4\u05d5\u05e8\u05e9\u05d9\u05dd \u05de\u05d9\u05e0\u05d9\u05de\u05dc\u05d9\u05d9\u05dd",
+          "even length paths",
+          "\u05e2\u05e5 \u05e4\u05d5\u05e8\u05e9 \u05de\u05d9\u05e0\u05d9\u05de\u05dc\u05d9",
+          "\u05ea\u05db\u05d5\u05e0\u05ea \u05d4\u05de\u05e2\u05d2\u05dc \u05dc\u05e2\u05e6\u05d9\u05dd \u05e4\u05d5\u05e8\u05e9\u05d9\u05dd \u05de\u05d9\u05e0\u05d9\u05de\u05dc\u05d9\u05d9\u05dd",
+          "special cases in input"
         ],
         "expected_topics": [
           "mst algorithms",
@@ -844,15 +844,15 @@
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0,
-        "latency_ms": 14.050006866455078,
+        "latency_ms": 18.250465393066406,
         "found_topics": [
-          "decision algorithms",
-          "divide and conquer",
-          "graph theory basics",
-          "heaviest independent set in a path graph",
-          "breadth-first search (bfs)",
           "majority element",
-          "algorithm description"
+          "breadth-first search (bfs)",
+          "heaviest independent set in a path graph",
+          "algorithm description",
+          "decision algorithms",
+          "graph theory basics",
+          "divide and conquer"
         ],
         "expected_topics": [
           "graph traversal",
@@ -867,11 +867,11 @@
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0,
-        "latency_ms": 14.824867248535156,
+        "latency_ms": 22.666454315185547,
         "found_topics": [
+          "time complexity comparison",
           "algorithm complexity",
-          "complexity analysis",
-          "time complexity comparison"
+          "complexity analysis"
         ],
         "expected_topics": [
           "np-completeness",
@@ -886,17 +886,17 @@
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0,
-        "latency_ms": 18.01276206970215,
+        "latency_ms": 19.823312759399414,
         "found_topics": [
-          "complexity analysis",
-          "algorithm complexity",
-          "merge sort",
           "time complexity comparison",
-          "algorithm description"
+          "complexity analysis",
+          "algorithm description",
+          "algorithm complexity",
+          "merge sort"
         ],
         "expected_topics": [
-          "divide-and-conquer",
-          "sorting algorithms"
+          "sorting algorithms",
+          "divide-and-conquer"
         ],
         "matched_count": 0
       },
@@ -907,14 +907,14 @@
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0,
-        "latency_ms": 17.72451400756836,
+        "latency_ms": 20.19333839416504,
         "found_topics": [
-          "maximum profit problem",
           "heaviest path in a grid",
-          "divide and conquer",
           "longest path in a directed acyclic graph (dag)",
+          "algorithm description",
+          "maximum profit problem",
           "carpenter problem",
-          "algorithm description"
+          "divide and conquer"
         ],
         "expected_topics": [
           "max flow",
@@ -929,12 +929,12 @@
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0,
-        "latency_ms": 10.041236877441406,
+        "latency_ms": 20.246267318725586,
         "found_topics": [
-          "algorithm complexity",
-          "complexity analysis",
           "time complexity comparison",
-          "fast exponentiation"
+          "complexity analysis",
+          "fast exponentiation",
+          "algorithm complexity"
         ],
         "expected_topics": [
           "np-completeness",
@@ -949,21 +949,21 @@
         "precision": 0.0,
         "recall": 0.0,
         "f1": 0.0,
-        "latency_ms": 12.038469314575195,
+        "latency_ms": 20.067453384399414,
         "found_topics": [
-          "decision algorithms",
-          "special cases in input",
           "deterministic algorithms",
           "pseudo-code",
-          "algorithm description"
+          "algorithm description",
+          "decision algorithms",
+          "special cases in input"
         ],
         "expected_topics": [
-          "search algorithms",
-          "backtracking"
+          "backtracking",
+          "search algorithms"
         ],
         "matched_count": 0
       }
     ]
   },
-  "timestamp": 1783940060.8739207
+  "timestamp": 1783944497.271681
 }

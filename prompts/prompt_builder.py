@@ -103,11 +103,18 @@ def build_homework_prompt(
     template = load_prompt_template("homework_prompt")
     msg = template["system_message_template"]
     
-    # Build the system message
-    sys_msg = (
-        f"{msg['role']}\n\n"
-        f"The student has learned these concepts:\n{concepts_list}\n\n"
-    )
+    # Build the system message with STRICT scope restrictions
+    sys_msg = f"{msg['role']}\n\n"
+    
+    # Add CRITICAL scope enforcement first
+    sys_msg += f"⚠️ CRITICAL SCOPE RESTRICTION:\n"
+    if msg.get('scope_restrictions'):
+        sys_msg += f"- {msg['scope_restrictions']['critical']}\n"
+        sys_msg += f"- ONLY answer questions about: **{hw_title}**\n"
+        sys_msg += f"- If question is out of scope, redirect with: 'That's not part of this assignment. Let's focus on {hw_title}.'\n\n"
+    
+    # Add concepts learned so far
+    sys_msg += f"The student has learned these concepts:\n{concepts_list}\n\n"
     
     if hw_description:
         sys_msg += f"**Problem Context**: {hw_description}\n\n"
@@ -115,14 +122,14 @@ def build_homework_prompt(
     if key_concepts:
         sys_msg += f"**Key Concepts for This Assignment**:\n{key_concepts}\n\n"
     
-    # Add Socratic method
-    sys_msg += f"**Your Role**: {msg['socratic_method']['core_principle']}\n"
+    # Add Socratic method with strict enforcement
+    sys_msg += f"**Your Teaching Role**: {msg['socratic_method']['core_principle']}\n\n"
     
-    sys_msg += "\nDOs:\n"
+    sys_msg += "**MUST DOs (Reference Curriculum):**\n"
     for do in msg['socratic_method']['dos']:
         sys_msg += f"- {do}\n"
     
-    sys_msg += "\nDON'Ts:\n"
+    sys_msg += "\n**MUST NOT DOs (Never Do These):**\n"
     for dont in msg['socratic_method']['donts']:
         sys_msg += f"- {dont}\n"
     

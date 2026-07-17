@@ -15,6 +15,15 @@ from search_integration import init_search, find_relevant_topics, get_search_met
 # Prompt templates from /prompts directory
 from prompts.prompt_builder import build_tutorial_prompt, build_homework_prompt
 
+# Socratic guidance with curriculum references + Hebrew support
+from socratic_guidance import (
+    validate_homework_query, 
+    generate_curriculum_reference,
+    get_text,
+    format_current_problem,
+    load_curriculum,
+)
+
 load_dotenv()
 
 PROVIDER  = os.getenv("LLM_PROVIDER", "openai").lower()
@@ -331,11 +340,29 @@ def build_homework_chain(hw_key: str, topics_covered: list, week_num: int) -> di
     }
 
 # ─────────────────────────────────────────────────────────────────────────────
+# LANGUAGE SUPPORT  —  Initialize language state
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Initialize language in session state
+if "language" not in st.session_state:
+    st.session_state.language = "en"
+
+# ─────────────────────────────────────────────────────────────────────────────
 # SIDEBAR  —  dark admin panel (teacher only)
 # ─────────────────────────────────────────────────────────────────────────────
 
 with st.sidebar:
     st.markdown("## ⚙️ Settings")
+    st.divider()
+
+    # Language selector
+    lang_choice = st.radio(
+        "Language / שפה",
+        options=["English", "עברית"],
+        index=0 if st.session_state.language == "en" else 1,
+        key="lang_selector"
+    )
+    st.session_state.language = "en" if lang_choice == "English" else "he"
     st.divider()
 
     with st.expander("🔑 API Key", expanded=not api_key_ok()):
@@ -489,14 +516,6 @@ elif mode == "homework":
     disp_name = hw_info.get("title", selected_hw)
     week_num = hw_info.get("week", 1)
     
-    # Show homework info
-    with st.expander(f"📋 {disp_name} Details", expanded=False):
-        st.markdown(f"**Description**: {hw_info.get('description', 'N/A')}")
-        st.markdown(f"**Problems**: {hw_info.get('problems', '?')}")
-        st.markdown(f"**Topics**: {', '.join(hw_info.get('topics', []))}")
-        if hw_info.get("problem_preview"):
-            st.markdown(f"**Preview**: {hw_info['problem_preview'][:300]}...")
-
     # Reset on HW switch
     if st.session_state.get("active_hw") != selected_hw or st.session_state.get("active_mode") != "homework":
         st.session_state.active_hw        = selected_hw
@@ -506,17 +525,49 @@ elif mode == "homework":
     
     # Use homework-specific chain
     topic_ctx = ""  # Not used in homework mode
+    
+    # ──────────────────────────────────────────────────────────────────────────
+    # HOMEWORK MODE: Create two-column layout with problem on left, chat on right
+    # ──────────────────────────────────────────────────────────────────────────
+    col_prob, col_chat = st.columns([1, 2.5], gap="large")
+    
+    with col_prob:
+        st.markdown(f"### 📝 {disp_name}")
+        st.markdown("---")
+        
+        # Show problem details
+        st.markdown(f"**Description:**\n{hw_info.get('description', 'N/A')}")
+        st.markdown(f"**Problems:** {hw_info.get('problems', '?')}")
+        st.markdown(f"**Topics:** {', '.join(hw_info.get('topics', []))}")
+        
+        # Show preview of first problem
+        if hw_info.get("problem_preview"):
+            st.markdown("**Problem Preview:**")
+            preview_text = hw_info['problem_preview'][:400]
+            st.code(preview_text + ("..." if len(preview_text) > 400 else ""), language="text")
+        
+        st.markdown("---")
+        st.info(
+            f"💡 **Focus:** Answer questions about THIS homework only.\n\n"
+            f"I will guide you using Socratic questions—not give answers directly."
+        )
+    
+    # Save problem info for scope validation later
+    st.session_state.current_hw_key = selected_hw
+    st.session_state.current_hw_info = hw_info
+
+else:
+    col_prob = None
+    col_chat = st
 
 st.divider()
 
 # ── Welcome screen (empty chat) ───────────────────────────────────────────────
 if not st.session_state.get("display_messages"):
-    welcome_msg = (
-        "I'm your Socratic tutor. I'll guide you toward the answer "
-        "with questions and hints — not give it to you directly."
-    )
+    lang = st.session_state.language
+    welcome_msg = get_text("welcome_tutor", lang)
     if mode == "homework":
-        welcome_msg += f"\n\n**{disp_name}**: {hw_info.get('description', '')}"
+        welcome_msg = get_text("welcome_hw", lang) + f"\n\n**{disp_name}**"
     
     st.markdown(
         f"<div style=\"text-align:center;padding:32px 0 20px;color:#475569\">"
@@ -542,8 +593,21 @@ if not api_key_ok() and PROVIDER == "openai":
     st.stop()
 
 # ── Chat input + streaming response ──────────────────────────────────────────
-placeholder = f"Ask about {disp_name}…"
+lang = st.session_state.language
+placeholder = get_text("ask_question", lang) if mode == "homework" else f"Ask about {disp_name}…"
 if user_input := st.chat_input(placeholder):
+
+    # 🔒 HOMEWORK MODE: Validate scope before processing
+    if mode == "homework":
+        all_homework = load_homework()
+        is_valid, error_msg = validate_homework_query(user_input, selected_hw, all_homework)
+        
+        if not is_valid:
+            # Show error message in chat
+            with st.chat_message("assistant", avatar="🎓"):
+                st.warning(f"⚠️ {error_msg}")
+                st.markdown(f"**Let's focus on {disp_name} instead.** What would you like to understand about it?")
+            st.stop()
 
     # 1. Show user message IMMEDIATELY — before any processing
     with st.chat_message("user", avatar="🧑‍🎓"):
@@ -560,6 +624,12 @@ if user_input := st.chat_input(placeholder):
                     enhanced_context = topic_ctx + f"\n\n[Related topics from your question: {', '.join(related_names)}]"
         except:
             pass  # Vector search failed; use original context
+    
+    # 2b. HOMEWORK MODE: Inject curriculum-aware guidance
+    elif mode == "homework":
+        hw_data = all_homework.get(selected_hw, {})
+        curriculum_ref = generate_curriculum_reference(user_input, hw_data.get("week", 1))
+        # This will be displayed before the assistant response
 
     # 3. Build appropriate chain based on mode
     if mode == "homework":
@@ -572,6 +642,11 @@ if user_input := st.chat_input(placeholder):
     chat_history = trimmed_history(st.session_state.get("chat_history", []))
 
     with st.chat_message("assistant", avatar="🎓"):
+        # Show curriculum reference if homework mode
+        if mode == "homework" and "curriculum_ref" in locals():
+            st.markdown(curriculum_ref)
+            st.divider()
+        
         # Build messages and stream response
         messages = ans_prompt.format_messages(
             chat_history=chat_history,
