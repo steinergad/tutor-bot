@@ -587,10 +587,16 @@ if user_input := st.chat_input(placeholder):
                 st.markdown(user_input)
             
             with st.chat_message("assistant", avatar="🎓"):
+                # Build error message in the student's language
+                if current_lang == "he":
+                    error_prefix = f"❌ השאלה הזו לא נראית קשורה לשיעורי הבית. בואו נתמקד בבעיה הנוכחית."
+                else:
+                    error_prefix = f"❌ This question doesn't seem to relate to the homework. Please focus on the current problem."
+                
                 error_msg = (
-                    f"❌ {reason}\n\n"
+                    f"{error_prefix}\n\n"
                     f"**{get_text(current_lang, 'refocus')}**\n\n"
-                    f"{get_scope_reminder(selected_hw)}"
+                    f"{get_scope_reminder(selected_hw, current_lang)}"
                 )
                 st.markdown(error_msg)
             

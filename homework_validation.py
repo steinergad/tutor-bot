@@ -39,20 +39,36 @@ def get_homework_scope(hw_key: str) -> dict:
 
 
 def extract_keywords(text: str) -> List[str]:
-    """Extract meaningful keywords from text."""
-    # Remove common words
-    stop_words = {
+    """Extract meaningful keywords from text (supports English and Hebrew)."""
+    # English stop words
+    en_stop_words = {
         "the", "a", "an", "is", "are", "was", "be", "been", "how", "what",
         "when", "where", "why", "do", "does", "can", "could", "would", "should",
         "if", "else", "for", "in", "on", "at", "to", "from", "of", "or", "and",
         "this", "that", "these", "those", "i", "you", "we", "they", "my", "your",
         "about", "with", "by", "as", "not", "no", "yes", "ok", "please", "thanks",
-        "question", "question", "ask", "help", "need", "want", "get", "make",
+        "question", "ask", "help", "need", "want", "get", "make",
     }
     
-    # Extract words
-    words = re.findall(r'\b[a-z]+\b', text.lower())
-    keywords = [w for w in words if len(w) > 2 and w not in stop_words]
+    # Hebrew stop words
+    he_stop_words = {
+        "את", "של", "אני", "אתה", "הוא", "היא", "הם", "הן", "זה", "זאת", 
+        "עם", "על", "אל", "מן", "לא", "כן", "או", "ו", "ל", "מ", "כ",
+        "זה", "כמו", "בין", "מה", "איך", "למה", "כיצד", "הוא", "היא",
+        "עזור", "לעזור", "שאלה", "שוא", "לשאול", "צריך", "רוצה", "יכול",
+    }
+    
+    combined_stop_words = en_stop_words | he_stop_words
+    
+    # Extract English words
+    en_words = re.findall(r'\b[a-z]+\b', text.lower())
+    
+    # Extract Hebrew words (Hebrew Unicode range)
+    he_words = re.findall(r'[\u05D0-\u05EA]+', text)
+    
+    # Combine and filter
+    all_words = en_words + he_words
+    keywords = [w for w in all_words if len(w) > 2 and w not in combined_stop_words]
     return keywords
 
 
@@ -65,12 +81,31 @@ def normalize_keyword(word: str) -> str:
     return word
 
 
+def get_scope_error_message(hw_key: str, lang: str = "en") -> str:
+    """
+    Get an out-of-scope error message in the specified language.
+    
+    Args:
+        hw_key: Current homework key  
+        lang: Language for output ("en" or "he")
+    
+    Returns:
+        Out-of-scope error message in the specified language
+    """
+    scope = get_homework_scope(hw_key)
+    
+    if lang == "he":
+        return f"❌ השאלה הזו לא נראית קשורה ל{scope['title']}. בואו נתמקד בבעיה הנוכחית."
+    else:  # English (default)
+        return f"❌ This question doesn't seem to relate to {scope['title']}. Please focus on the current problem."
+
+
 def is_in_scope(query: str, hw_key: str, curriculum_topics: List[str] = None) -> Tuple[bool, str]:
     """
     Check if a query is within the scope of the current homework.
     
     Args:
-        query: Student's question
+        query: Student's question (English or Hebrew)
         hw_key: Current homework key
         curriculum_topics: Optional list of all curriculum topics (for cross-hw detection)
     
@@ -79,7 +114,20 @@ def is_in_scope(query: str, hw_key: str, curriculum_topics: List[str] = None) ->
     """
     scope = get_homework_scope(hw_key)
     
-    # Extract keywords from query
+    # ── First check: Is this clearly a homework help question? ──────────────────────
+    # Common Hebrew homework help phrases
+    he_homework_phrases = ["עזור", "בעיה", "משימה", "תרגיל", "צריך"]
+    en_homework_phrases = ["help", "problem", "question", "stuck", "confused", "understand"]
+    
+    has_he_homework = any(phrase in query for phrase in he_homework_phrases)
+    has_en_homework = any(phrase in query.lower() for phrase in en_homework_phrases)
+    
+    if has_he_homework or has_en_homework:
+        # Student is clearly asking for homework help - allow it
+        return True, ""
+    
+    # ── Second check: Keyword-based scope validation ──────────────────────────────
+    # Extract keywords from query (works for both English and Hebrew)
     query_keywords = set(extract_keywords(query))
     
     if not query_keywords:
@@ -98,8 +146,6 @@ def is_in_scope(query: str, hw_key: str, curriculum_topics: List[str] = None) ->
     normalized_query = {normalize_keyword(kw) for kw in query_keywords}
     
     # Check for strong topical overlap (at least 20% of query keywords in scope)
-    # Lowered from 30% to 20% to be more permissive with legitimate homework questions
-    # (e.g., "How do I calculate the time complexity of a sorting algorithm?" should pass)
     if scope_keywords:
         overlap = len(normalized_query & scope_keywords) / len(normalized_query)
         if overlap < 0.20:  # Less than 20% match = probably out of scope
@@ -117,12 +163,13 @@ def is_in_scope(query: str, hw_key: str, curriculum_topics: List[str] = None) ->
     return True, ""
 
 
-def get_scope_reminder(hw_key: str) -> str:
+def get_scope_reminder(hw_key: str, lang: str = "en") -> str:
     """
     Generate a reminder of what the student can ask about.
     
     Args:
         hw_key: Current homework key
+        lang: Language for output ("en" or "he")
     
     Returns:
         Formatted string listing allowed topics
@@ -132,9 +179,17 @@ def get_scope_reminder(hw_key: str) -> str:
     topics_str = ", ".join(scope["topics"])
     concepts_str = ", ".join(scope["key_concepts"])
     
-    return (
-        f"**{scope['title']}** covers:\n"
-        f"• **Topics**: {topics_str}\n"
-        f"• **Concepts**: {concepts_str}\n"
-        f"\nPlease ask questions related to these topics."
-    )
+    if lang == "he":
+        return (
+            f"**{scope['title']}** כוללת:\n"
+            f"• **נושאים**: {topics_str}\n"
+            f"• **מושגים**: {concepts_str}\n"
+            f"\nבואו נשתמש לשאלות הקשורות לנושאים אלה."
+        )
+    else:  # English (default)
+        return (
+            f"**{scope['title']}** covers:\n"
+            f"• **Topics**: {topics_str}\n"
+            f"• **Concepts**: {concepts_str}\n"
+            f"\nPlease ask questions related to these topics."
+        )
