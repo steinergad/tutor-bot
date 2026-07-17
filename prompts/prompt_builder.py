@@ -91,6 +91,9 @@ def build_homework_prompt(
     """
     Build complete system prompt for homework/Socratic mode.
     
+    IMPORTANT: This prompt enforces curriculum-grounding and strict Socratic method.
+    The tutor MUST reference specific tutorials/lectures, not give generic hints.
+    
     Args:
         concepts_list: Formatted list of learned concepts (newline-separated)
         hw_title: Title of homework assignment
@@ -103,18 +106,12 @@ def build_homework_prompt(
     template = load_prompt_template("homework_prompt")
     msg = template["system_message_template"]
     
-    # Build the system message with STRICT scope restrictions
-    sys_msg = f"{msg['role']}\n\n"
-    
-    # Add CRITICAL scope enforcement first
-    sys_msg += f"⚠️ CRITICAL SCOPE RESTRICTION:\n"
-    if msg.get('scope_restrictions'):
-        sys_msg += f"- {msg['scope_restrictions']['critical']}\n"
-        sys_msg += f"- ONLY answer questions about: **{hw_title}**\n"
-        sys_msg += f"- If question is out of scope, redirect with: 'That's not part of this assignment. Let's focus on {hw_title}.'\n\n"
-    
-    # Add concepts learned so far
-    sys_msg += f"The student has learned these concepts:\n{concepts_list}\n\n"
+    # Build the system message
+    sys_msg = (
+        f"{msg['role']}\n\n"
+        f"**CURRICULUM GROUNDING**: {msg['core_principle']}\n\n"
+        f"The student has learned these concepts:\n{concepts_list}\n\n"
+    )
     
     if hw_description:
         sys_msg += f"**Problem Context**: {hw_description}\n\n"
@@ -122,16 +119,24 @@ def build_homework_prompt(
     if key_concepts:
         sys_msg += f"**Key Concepts for This Assignment**:\n{key_concepts}\n\n"
     
-    # Add Socratic method with strict enforcement
-    sys_msg += f"**Your Teaching Role**: {msg['socratic_method']['core_principle']}\n\n"
+    # Add Socratic method philosophy
+    sys_msg += f"**PHILOSOPHY**: {msg['socratic_method']['philosophy']}\n\n"
     
-    sys_msg += "**MUST DOs (Reference Curriculum):**\n"
+    sys_msg += "**What You MUST Do**:\n"
     for do in msg['socratic_method']['dos']:
         sys_msg += f"- {do}\n"
     
-    sys_msg += "\n**MUST NOT DOs (Never Do These):**\n"
+    sys_msg += "\n**What You MUST NOT Do**:\n"
     for dont in msg['socratic_method']['donts']:
         sys_msg += f"- {dont}\n"
+    
+    sys_msg += f"\n**Curriculum Grounding Rules**:\n"
+    sys_msg += f"- Every question should reference a specific tutorial, week, or concept from the curriculum\n"
+    sys_msg += f"- Generic advice is BANNED (no 'consider the loops', 'think step by step', etc.)\n"
+    sys_msg += f"- Examples of GOOD guidance: 'In Tutorial 2, we analyzed merge sort...', 'Week 1 homework had a similar pattern...'\n"
+    sys_msg += f"- Examples of BAD guidance: 'Think about complexity', 'Consider the nested loops', 'Let's analyze this step by step'\n"
+    
+    sys_msg += f"\n**Scope Rule**: Stay focused on {hw_title}. Redirect off-topic questions.\n"
     
     # Add math formatting instructions
     sys_msg += (
