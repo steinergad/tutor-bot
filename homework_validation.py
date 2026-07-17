@@ -56,6 +56,15 @@ def extract_keywords(text: str) -> List[str]:
     return keywords
 
 
+def normalize_keyword(word: str) -> str:
+    """Normalize keywords to handle plurals and common variants."""
+    # Handle common singular/plural forms
+    if word.endswith('s') and len(word) > 3:
+        # Try singular form: "algorithms" → "algorithm", "loops" → "loop"
+        return word[:-1]
+    return word
+
+
 def is_in_scope(query: str, hw_key: str, curriculum_topics: List[str] = None) -> Tuple[bool, str]:
     """
     Check if a query is within the scope of the current homework.
@@ -76,17 +85,24 @@ def is_in_scope(query: str, hw_key: str, curriculum_topics: List[str] = None) ->
     if not query_keywords:
         return True, ""  # Generic question OK if no specific keywords
     
-    # Build scope keywords (topics + concepts)
+    # Build scope keywords (topics + concepts) with normalization
     scope_keywords = set()
     for topic in scope["topics"]:
-        scope_keywords.update(extract_keywords(topic))
+        for kw in extract_keywords(topic):
+            scope_keywords.add(normalize_keyword(kw))
     for concept in scope["key_concepts"]:
-        scope_keywords.update(extract_keywords(concept))
+        for kw in extract_keywords(concept):
+            scope_keywords.add(normalize_keyword(kw))
     
-    # Check for strong topical overlap (at least 30% of query keywords in scope)
+    # Normalize query keywords too
+    normalized_query = {normalize_keyword(kw) for kw in query_keywords}
+    
+    # Check for strong topical overlap (at least 20% of query keywords in scope)
+    # Lowered from 30% to 20% to be more permissive with legitimate homework questions
+    # (e.g., "How do I calculate the time complexity of a sorting algorithm?" should pass)
     if scope_keywords:
-        overlap = len(query_keywords & scope_keywords) / len(query_keywords)
-        if overlap < 0.3:  # Less than 30% match = potentially out of scope
+        overlap = len(normalized_query & scope_keywords) / len(normalized_query)
+        if overlap < 0.20:  # Less than 20% match = probably out of scope
             # Additional check: is it asking about a DIFFERENT homework?
             if curriculum_topics:
                 for other_topic in curriculum_topics:
