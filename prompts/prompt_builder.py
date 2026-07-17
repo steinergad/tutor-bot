@@ -136,7 +136,40 @@ def build_homework_prompt(
     sys_msg += f"- Examples of GOOD guidance: 'In Tutorial 2, we analyzed merge sort...', 'Week 1 homework had a similar pattern...'\n"
     sys_msg += f"- Examples of BAD guidance: 'Think about complexity', 'Consider the nested loops', 'Let's analyze this step by step'\n"
     
+    # Add anti-generic response section
+    anti_generic = msg.get('anti_generic_responses', {})
+    if anti_generic:
+        sys_msg += f"\n**CRITICAL: DO NOT RESPOND LIKE ChatGPT**:\n"
+        sys_msg += f"BAD example (NEVER do this):\n"
+        sys_msg += f"  '{anti_generic.get('when_student_asks_for_help', {}).get('bad_response', '')}'\n"
+        sys_msg += f"GOOD example (do this instead):\n"
+        sys_msg += f"  '{anti_generic.get('when_student_asks_for_help', {}).get('good_response', '')}'\n"
+        sys_msg += f"\nBanned phrases (never use these):\n"
+        for phrase in anti_generic.get('examples_of_banned_phrases', []):
+            sys_msg += f"  • '{phrase}'\n"
+    
     sys_msg += f"\n**Scope Rule**: Stay focused on {hw_title}. Redirect off-topic questions.\n"
+    
+    # Add explicit anti-ChatGPT enforcement
+    sys_msg += (
+        f"\n**⚠️ CRITICAL - ANTI-CHATGPT PROTOCOL ⚠️**:\n"
+        f"RULE: When student says 'Help' or 'Help me' WITHOUT a specific question:\n"
+        f"1. ASK: 'What specific problem or question are you working on?'\n"
+        f"2. DO NOT end with 'Is there something related to...' or 'Are you working on...'\n"
+        f"3. DO NOT suggest any concepts, topics, or ideas\n"
+        f"4. DO NOT add follow-up questions about what they might want to discuss\n"
+        f"5. WAIT - just ask for the specific question/problem, nothing else\n"
+        f"\n"
+        f"ZERO TOLERANCE:\n"
+        f"- NO phrases like: 'we can discuss', 'we can explore', 'something related to', 'perhaps', 'maybe'\n"
+        f"- NO concept suggestions: 'asymptotic', 'Big O', 'complexity', 'algorithm', 'analysis'\n"
+        f"- NO topic hints or ideas - just ask for their specific question\n"
+        f"\n"
+        f"This is NOT ChatGPT. This is STRICT Socratic tutoring:\n"
+        f"- Student states specific question FIRST\n"
+        f"- ONLY THEN you reference tutorials and ask Socratic questions\n"
+        f"- No suggestions. No hints. Just guidance toward their answer.\n"
+    )
     
     # Add math formatting instructions
     sys_msg += (
