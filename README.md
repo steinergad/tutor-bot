@@ -58,12 +58,45 @@ export LLM_PROVIDER=ollama
 export OLLAMA_LLM_MODEL=llama3.2
 ```
 
-### 3. Run
+### 3. Build Vector Database (from your PDFs)
+```bash
+# Place PDFs in material/ directory first
+python extract_tutorials_pipeline.py     # Extract text from PDFs
+python -c "from vector_db import VectorDB; VectorDB().build_database('db/metadata.json')"
+```
+
+📖 **Full guide:** See [VECTOR_DB_SETUP.md](VECTOR_DB_SETUP.md) for detailed instructions
+
+### 4. Run
 ```bash
 streamlit run app.py
 # Opens http://localhost:8501
-# Vector DB builds automatically on first run (~2 seconds)
+# Vector DB loads automatically (~3-5 seconds)
 ```
+
+---
+
+## 📚 For Your Team: Important Guides
+
+### ⭐ NEW: How to Build the Vector Database
+→ **[VECTOR_DB_SETUP.md](VECTOR_DB_SETUP.md)** 
+- Step-by-step PDF extraction
+- Metadata generation
+- Database construction
+- Troubleshooting guide
+- **Deployment checklist for team members**
+
+### ⭐ NEW: Embedding Model Comparison
+→ **[MODEL_COMPARISON.md](MODEL_COMPARISON.md)**
+- Analysis of current model (all-MiniLM-L6-v2)
+- Why we chose it (speed + accuracy tradeoff)
+- Comparison with alternatives (all-mpnet, e5-large)
+- Google NotebookLM architecture explained
+- Open-Notebook vs your approach
+- Upgrade paths & recommendations
+
+### Other Documentation
+→ **[DOCUMENTATION.md](DOCUMENTATION.md)** — Complete documentation index
 
 ---
 
