@@ -25,7 +25,7 @@ def get_homework_scope(hw_key: str) -> dict:
         hw_key: Homework identifier (e.g., 'hw_1')
     
     Returns:
-        Dictionary with: topics, key_concepts, week_num
+        Dictionary with: topics, key_concepts, week_num, problem_preview
     """
     hw_data = load_homework_data().get(hw_key, {})
     
@@ -35,6 +35,7 @@ def get_homework_scope(hw_key: str) -> dict:
         "title": hw_data.get("title", hw_key),
         "week": hw_data.get("week", 0),
         "description": hw_data.get("description", ""),
+        "problem_preview": hw_data.get("problem_preview", ""),
     }
 
 
@@ -117,7 +118,7 @@ def is_in_scope(query: str, hw_key: str, curriculum_topics: List[str] = None) ->
     # ── First check: Is this clearly a homework help question? ──────────────────────
     # Common Hebrew homework help phrases
     he_homework_phrases = ["עזור", "בעיה", "משימה", "תרגיל", "צריך"]
-    en_homework_phrases = ["help", "problem", "question", "stuck", "confused", "understand"]
+    en_homework_phrases = ["help", "problem", "question", "stuck", "confused", "understand", "how", "solve", "implement"]
     
     has_he_homework = any(phrase in query for phrase in he_homework_phrases)
     has_en_homework = any(phrase in query.lower() for phrase in en_homework_phrases)
@@ -142,13 +143,21 @@ def is_in_scope(query: str, hw_key: str, curriculum_topics: List[str] = None) ->
         for kw in extract_keywords(concept):
             scope_keywords.add(normalize_keyword(kw))
     
+    # Also extract keywords from problem_preview (includes example problems like Fibonacci, Merge Sort)
+    problem_preview = scope.get("problem_preview", "")
+    description = scope.get("description", "")
+    for text in [problem_preview, description]:
+        if text:
+            for kw in extract_keywords(text):
+                scope_keywords.add(normalize_keyword(kw))
+    
     # Normalize query keywords too
     normalized_query = {normalize_keyword(kw) for kw in query_keywords}
     
-    # Check for strong topical overlap (at least 20% of query keywords in scope)
+    # Check for strong topical overlap (at least 15% of query keywords in scope)
     if scope_keywords:
         overlap = len(normalized_query & scope_keywords) / len(normalized_query)
-        if overlap < 0.20:  # Less than 20% match = probably out of scope
+        if overlap < 0.15:  # Less than 15% match = probably out of scope
             # Additional check: is it asking about a DIFFERENT homework?
             if curriculum_topics:
                 for other_topic in curriculum_topics:
