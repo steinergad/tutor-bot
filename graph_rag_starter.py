@@ -42,6 +42,12 @@ class Entity:
     tutorial_id: str = ""
     section: str = ""
     difficulty: str = "intermediate"  # beginner, intermediate, advanced
+    week: int = 0
+    homework_weeks: List[int] = None
+    
+    def __post_init__(self):
+        if self.homework_weeks is None:
+            self.homework_weeks = []
     
     def to_dict(self) -> dict:
         return {
@@ -51,7 +57,9 @@ class Entity:
             'description': self.description,
             'tutorial_id': self.tutorial_id,
             'section': self.section,
-            'difficulty': self.difficulty
+            'difficulty': self.difficulty,
+            'week': self.week,
+            'homework_weeks': self.homework_weeks
         }
 
 
@@ -174,16 +182,19 @@ class LightweightKnowledgeGraph:
         """Add relationship between entities. Returns True if new."""
         cursor = self.conn.cursor()
         try:
+            # Handle both string and enum relation_types
+            rel_type = rel.relation_type.value if hasattr(rel.relation_type, 'value') else str(rel.relation_type)
+            
             cursor.execute("""
                 INSERT INTO relationships 
                 (from_id, to_id, relation_type, confidence, explanation)
                 VALUES (?, ?, ?, ?, ?)
-            """, (rel.from_id, rel.to_id, rel.relation_type.value,
+            """, (rel.from_id, rel.to_id, rel_type,
                   rel.confidence, rel.explanation))
             self.conn.commit()
             
             # Add to in-memory graph
-            self.G.add_edge(rel.from_id, rel.to_id, relation=rel.relation_type.value)
+            self.G.add_edge(rel.from_id, rel.to_id, relation=rel_type)
             return True
         except sqlite3.IntegrityError:
             return False  # Already exists
@@ -330,7 +341,18 @@ class LightweightKnowledgeGraph:
         with open(entities_file) as f:
             entities_data = json.load(f)
             for entity_dict in entities_data:
-                entity = Entity(**entity_dict)
+                # Extract only the fields that Entity expects
+                entity = Entity(
+                    id=entity_dict['id'],
+                    name=entity_dict['name'],
+                    entity_type=entity_dict.get('entity_type', entity_dict.get('type', 'unknown')),
+                    description=entity_dict.get('description', ''),
+                    tutorial_id=entity_dict.get('tutorial_id', ''),
+                    section=entity_dict.get('section', ''),
+                    difficulty=entity_dict.get('difficulty', 'intermediate'),
+                    week=entity_dict.get('week', 0),
+                    homework_weeks=entity_dict.get('homework_weeks', [])
+                )
                 self.add_entity(entity)
         
         print(f"✓ Loaded {len(entities_data)} entities")
@@ -339,10 +361,23 @@ class LightweightKnowledgeGraph:
         with open(relationships_file) as f:
             rels_data = json.load(f)
             for rel_dict in rels_data:
+                # Handle both 'type' and 'relation_type' keys
+                rel_type_str = rel_dict.get('relation_type', rel_dict.get('type', 'requires'))
+                
+                # Handle string relation types
+                try:
+                    if isinstance(rel_type_str, str):
+                        # Map string to enum if it matches, otherwise keep as string
+                        rel_type = rel_type_str
+                    else:
+                        rel_type = rel_type_str.value
+                except (ValueError, AttributeError):
+                    rel_type = rel_type_str
+                
                 rel = Relationship(
                     from_id=rel_dict['from_id'],
                     to_id=rel_dict['to_id'],
-                    relation_type=RelationType(rel_dict['type']),
+                    relation_type=rel_type,
                     confidence=rel_dict.get('confidence', 1.0),
                     explanation=rel_dict.get('explanation', '')
                 )
@@ -353,10 +388,12 @@ class LightweightKnowledgeGraph:
     def stats(self) -> Dict:
         """Get graph statistics"""
         return {
+            'num_entities': self.G.number_of_nodes(),
+            'num_relationships': self.G.number_of_edges(),
+            'density': nx.density(self.G) if self.G.number_of_nodes() > 0 else 0,
+            'is_connected': nx.is_strongly_connected(self.G) if self.G.number_of_nodes() > 0 else False,
             'nodes': self.G.number_of_nodes(),
-            'edges': self.G.number_of_edges(),
-            'density': nx.density(self.G),
-            'is_connected': nx.is_strongly_connected(self.G)
+            'edges': self.G.number_of_edges()
         }
 
 

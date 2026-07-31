@@ -191,10 +191,10 @@ def show_statistics(kg: LightweightKnowledgeGraph):
     print(f"\n  Entity Type Distribution:")
     type_counts = defaultdict(int)
     
-    with kg.conn.cursor() as cur:
-        cur.execute("SELECT entity_type, COUNT(*) as count FROM entities GROUP BY entity_type")
-        for entity_type, count in cur.fetchall():
-            type_counts[entity_type] = count
+    cur = kg.conn.cursor()
+    cur.execute("SELECT type, COUNT(*) as count FROM entities GROUP BY type")
+    for entity_type, count in cur.fetchall():
+        type_counts[entity_type] = count
     
     for entity_type, count in sorted(type_counts.items(), key=lambda x: x[1], reverse=True):
         print(f"    • {entity_type}: {count}")
@@ -203,10 +203,10 @@ def show_statistics(kg: LightweightKnowledgeGraph):
     print(f"\n  Relationship Type Distribution:")
     rel_counts = defaultdict(int)
     
-    with kg.conn.cursor() as cur:
-        cur.execute("SELECT relation_type, COUNT(*) as count FROM relationships GROUP BY relation_type")
-        for rel_type, count in cur.fetchall():
-            rel_counts[rel_type] = count
+    cur = kg.conn.cursor()
+    cur.execute("SELECT relation_type, COUNT(*) as count FROM relationships GROUP BY relation_type")
+    for rel_type, count in cur.fetchall():
+        rel_counts[rel_type] = count
     
     for rel_type, count in sorted(rel_counts.items(), key=lambda x: x[1], reverse=True):
         print(f"    • {rel_type}: {count}")
@@ -226,46 +226,46 @@ def verify_graph():
     
     # Check for orphaned nodes
     print("\n  Checking for orphaned entities...")
-    with kg.conn.cursor() as cur:
-        cur.execute("""
-            SELECT e.id, e.name FROM entities e
-            WHERE e.id NOT IN (
-                SELECT from_id FROM relationships
-                UNION
-                SELECT to_id FROM relationships
-            )
-        """)
-        orphaned = cur.fetchall()
-        if orphaned:
-            warnings.append(f"Found {len(orphaned)} orphaned entities (no relationships)")
-        else:
-            print("  ✅ No orphaned entities")
+    cur = kg.conn.cursor()
+    cur.execute("""
+        SELECT e.id, e.name FROM entities e
+        WHERE e.id NOT IN (
+            SELECT from_id FROM relationships
+            UNION
+            SELECT to_id FROM relationships
+        )
+    """)
+    orphaned = cur.fetchall()
+    if orphaned:
+        warnings.append(f"Found {len(orphaned)} orphaned entities (no relationships)")
+    else:
+        print("  ✅ No orphaned entities")
     
     # Check for broken relationships
     print("\n  Checking for broken relationships...")
-    with kg.conn.cursor() as cur:
-        cur.execute("""
-            SELECT r.id, r.from_id, r.to_id FROM relationships r
-            WHERE r.from_id NOT IN (SELECT id FROM entities)
-            OR r.to_id NOT IN (SELECT id FROM entities)
-        """)
-        broken = cur.fetchall()
-        if broken:
-            errors.append(f"Found {len(broken)} broken relationships (missing entities)")
-        else:
-            print("  ✅ No broken relationships")
+    cur = kg.conn.cursor()
+    cur.execute("""
+        SELECT r.id, r.from_id, r.to_id FROM relationships r
+        WHERE r.from_id NOT IN (SELECT id FROM entities)
+        OR r.to_id NOT IN (SELECT id FROM entities)
+    """)
+    broken = cur.fetchall()
+    if broken:
+        errors.append(f"Found {len(broken)} broken relationships (missing entities)")
+    else:
+        print("  ✅ No broken relationships")
     
     # Check relationship type validity
     print("\n  Checking relationship types...")
     valid_types = [t.value for t in RelationType]
-    with kg.conn.cursor() as cur:
-        cur.execute("SELECT DISTINCT relation_type FROM relationships")
-        db_types = [row[0] for row in cur.fetchall()]
-        invalid = set(db_types) - set(valid_types)
-        if invalid:
-            warnings.append(f"Found {len(invalid)} invalid relationship types: {invalid}")
-        else:
-            print("  ✅ All relationship types are valid")
+    cur = kg.conn.cursor()
+    cur.execute("SELECT DISTINCT relation_type FROM relationships")
+    db_types = [row[0] for row in cur.fetchall()]
+    invalid = set(db_types) - set(valid_types)
+    if invalid:
+        warnings.append(f"Found {len(invalid)} invalid relationship types: {invalid}")
+    else:
+        print("  ✅ All relationship types are valid")
     
     # Summary
     print("\n" + "-" * 70)
