@@ -19,6 +19,13 @@ from prompts.prompt_builder import build_tutorial_prompt, build_homework_prompt
 from language_config import get_text, LANGUAGES
 from homework_validation import is_in_scope, get_scope_reminder
 
+# Graph RAG integration (Phase 4)
+try:
+    from graph_rag_starter import LightweightKnowledgeGraph, HybridRetriever
+    GRAPH_RAG_ENABLED = True
+except ImportError:
+    GRAPH_RAG_ENABLED = False
+
 load_dotenv()
 
 PROVIDER  = os.getenv("LLM_PROVIDER", "openai").lower()
@@ -297,7 +304,72 @@ def build_chain(hw_id: str, topic_context: str, disp_name: str = "") -> dict:
     }
 
 @st.cache_resource
-def build_homework_chain(hw_key: str, topics_covered: list, week_num: int) -> dict:
+def load_knowledge_graph():
+    """Load knowledge graph once per session."""
+    if not GRAPH_RAG_ENABLED:
+        return None, None
+    
+    try:
+        db_path = str(DB_DIR / "knowledge_graph.db")
+        kg = LightweightKnowledgeGraph(db_path)
+        print(f"✅ Knowledge graph loaded from {db_path}")
+        return kg, None
+    except Exception as e:
+        print(f"⚠️  Knowledge graph load failed: {e}")
+        return None, None
+
+
+def get_graph_context_for_homework(user_question: str, hw_key: str, kg) -> str:
+    """Build enriched context using knowledge graph for homework questions."""
+    if not kg:
+        return ""
+    
+    try:
+        # Try to find related entities in the graph
+        result = kg.find_entity_by_name(user_question.split()[0] if user_question.split() else "")
+        
+        if not result:
+            # Try broader search by keywords
+            words = user_question.lower().split()
+            for word in words:
+                result = kg.find_entity_by_name(word)
+                if result:
+                    break
+        
+        if result:
+            context_lines = ["\n**📚 Learning Context from Curriculum:**"]
+            context_lines.append(f"\nTopic: **{result.name}** ({result.entity_type})")
+            
+            # Get prerequisites
+            try:
+                prereqs = kg.find_prerequisites(result.id)
+                if prereqs:
+                    context_lines.append("\n**Prerequisites you should know:**")
+                    for prereq in prereqs[:3]:
+                        context_lines.append(f"  • {prereq['entity'].name}")
+            except:
+                pass
+            
+            # Get learning path
+            try:
+                path = kg.get_learning_path(result.id)
+                if path:
+                    context_lines.append("\n**Suggested learning path:**")
+                    for i, step in enumerate(path[:4], 1):
+                        context_lines.append(f"  {i}. {step.name}")
+            except:
+                pass
+            
+            return "\n".join(context_lines)
+    except Exception as e:
+        pass
+    
+    return ""
+
+
+
+
+def build_homework_chain(hw_key: str, topics_covered: list, week_num: int, graph_context: str = "") -> dict:
     """Builds LangChain pipeline for homework problem-solving using /prompts directory (Socratic method)"""
     from langchain_core.output_parsers import StrOutputParser
     from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
@@ -319,6 +391,10 @@ def build_homework_chain(hw_key: str, topics_covered: list, week_num: int) -> di
     hw_description = hw_data.get("description", "")
     key_concepts_list = hw_data.get("key_concepts", [])
     key_concepts = "\n".join(f"  • {c}" for c in key_concepts_list)
+    
+    # Add graph context if available
+    if graph_context:
+        key_concepts = graph_context + "\n\n" + key_concepts
     
     # Build system prompt from /prompts/homework_prompt.json
     sys_msg = build_homework_prompt(
@@ -416,6 +492,9 @@ with st.sidebar:
 # ─────────────────────────────────────────────────────────────────────────────
 # MAIN  —  student chat interface
 # ─────────────────────────────────────────────────────────────────────────────
+
+# Load knowledge graph once at session start
+kg, _ = load_knowledge_graph()
 
 meta    = load_meta()
 hw_list = get_hw_list()
@@ -629,7 +708,11 @@ if user_input := st.chat_input(placeholder):
 
     # 3. Build appropriate chain based on mode
     if mode == "homework":
-        parts        = build_homework_chain(selected_hw, [], week_num)
+        # Get graph context for homework questions
+        graph_ctx = ""
+        if kg:
+            graph_ctx = get_graph_context_for_homework(user_input, selected_hw, kg)
+        parts        = build_homework_chain(selected_hw, [], week_num, graph_ctx)
     else:
         parts        = build_chain(selected_hw, enhanced_context, disp_name)
     
