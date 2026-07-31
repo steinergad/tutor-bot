@@ -441,43 +441,45 @@ with st.sidebar:
     
     st.divider()
 
-    with st.expander("🔑 API Key", expanded=not api_key_ok()):
-        if api_key_ok():
-            src = "GitHub Copilot" if os.getenv("GITHUB_TOKEN") else "OpenAI"
-            st.success(f"{src} key saved ✅")
+    # Only show API key section for OpenAI provider
+    if PROVIDER == "openai":
+        with st.expander("🔑 API Key", expanded=not api_key_ok()):
+            if api_key_ok():
+                src = "GitHub Copilot" if os.getenv("GITHUB_TOKEN") else "OpenAI"
+                st.success(f"{src} key saved ✅")
 
-        st.markdown("**Option A — GitHub Copilot** *(recommended — you already pay for it)*")
-        st.caption(
-            "Get a free PAT at [github.com/settings/tokens](https://github.com/settings/tokens) "
-            "→ *Generate new token (classic)* → no scopes needed → copy."
-        )
-        gh_input = st.text_input(
-            "GitHub PAT", type="password",
-            placeholder="github_pat_... or ghp_...",
-            label_visibility="collapsed",
-        )
-        if st.button("Save GitHub token", use_container_width=True):
-            if gh_input.startswith(("github_pat_", "ghp_")):
-                save_env_var("GITHUB_TOKEN", gh_input)
-                save_env_var("OPENAI_API_KEY", "")   # clear OpenAI key
-                build_chain.clear()
-                st.success("GitHub token saved! Uses gpt-4o-mini via Copilot.")
-                st.rerun()
-            else:
-                st.error("Must start with github_pat_ or ghp_")
+            st.markdown("**Option A — GitHub Copilot** *(recommended — you already pay for it)*")
+            st.caption(
+                "Get a free PAT at [github.com/settings/tokens](https://github.com/settings/tokens) "
+                "→ *Generate new token (classic)* → no scopes needed → copy."
+            )
+            gh_input = st.text_input(
+                "GitHub PAT", type="password",
+                placeholder="github_pat_... or ghp_...",
+                label_visibility="collapsed",
+            )
+            if st.button("Save GitHub token", use_container_width=True):
+                if gh_input.startswith(("github_pat_", "ghp_")):
+                    save_env_var("GITHUB_TOKEN", gh_input)
+                    save_env_var("OPENAI_API_KEY", "")   # clear OpenAI key
+                    build_chain.clear()
+                    st.success("GitHub token saved! Uses gpt-4o-mini via Copilot.")
+                    st.rerun()
+                else:
+                    st.error("Must start with github_pat_ or ghp_")
 
-        st.divider()
-        st.markdown("**Option B — OpenAI key** *(pay-per-use, needs credits)*")
-        oi = st.text_input(
-            "OpenAI key", type="password",
-            placeholder="sk-proj-...",
-            label_visibility="collapsed",
-        )
-        if st.button("Save OpenAI key", use_container_width=True):
-            if oi.startswith("sk-"):
-                save_env_var("OPENAI_API_KEY", oi)
-                save_env_var("GITHUB_TOKEN", "")   # clear GH token
-                build_chain.clear()
+            st.divider()
+            st.markdown("**Option B — OpenAI key** *(pay-per-use, needs credits)*")
+            oi = st.text_input(
+                "OpenAI key", type="password",
+                placeholder="sk-proj-...",
+                label_visibility="collapsed",
+            )
+            if st.button("Save OpenAI key", use_container_width=True):
+                if oi.startswith("sk-"):
+                    save_env_var("OPENAI_API_KEY", oi)
+                    save_env_var("GITHUB_TOKEN", "")   # clear GH token
+                    build_chain.clear()
                 st.success("OpenAI key saved!")
                 st.rerun()
             else:
@@ -486,7 +488,7 @@ with st.sidebar:
     st.divider()
     active = "GitHub Copilot" if os.getenv("GITHUB_TOKEN") else PROVIDER.upper()
     st.caption(f"LLM: **{active}**")
-    if not api_key_ok():
+    if PROVIDER == "openai" and not api_key_ok():
         st.warning("Chat needs an API key.")
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -645,10 +647,14 @@ for msg in st.session_state.get("display_messages", []):
         st.markdown(msg["content"])
 
 # ── No API key guard ──────────────────────────────────────────────────────────
-if not api_key_ok() and PROVIDER == "openai":
+# Only require API key for OpenAI provider; Ollama works without keys
+if PROVIDER == "openai" and not api_key_ok():
     st.chat_input("Open the sidebar to add your API key…", disabled=True)
     st.info("👈 Open the sidebar (top-left ▸) and add your OpenAI API key to start chatting.")
     st.stop()
+elif PROVIDER != "openai":
+    # For Ollama, skip API key requirement
+    pass
 
 # ── Chat input + streaming response ──────────────────────────────────────────
 placeholder = f"Ask about {disp_name}…"
