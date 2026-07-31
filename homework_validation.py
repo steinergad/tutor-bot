@@ -116,8 +116,16 @@ def is_in_scope(query: str, hw_key: str, curriculum_topics: List[str] = None) ->
     scope = get_homework_scope(hw_key)
     
     # ── First check: Is this clearly a homework help question? ──────────────────────
-    # Common Hebrew homework help phrases
-    he_homework_phrases = ["עזור", "בעיה", "משימה", "תרגיל", "צריך"]
+    # Common Hebrew homework help phrases (including variations and plurals)
+    he_homework_phrases = [
+        "עזור", "עזרה", "עוזר",  # help/helping
+        "בעיה", "בעיות",          # problem/problems
+        "משימה", "משימות",       # task/tasks
+        "תרגיל", "תרגילים",      # exercise/exercises
+        "צריך", "צריכה",          # need (masculine/feminine)
+        "איך", "כיצד",            # how
+        "פותר", "פתור", "לפתור", # solve/solving
+    ]
     en_homework_phrases = ["help", "problem", "question", "stuck", "confused", "understand", "how", "solve", "implement"]
     
     has_he_homework = any(phrase in query for phrase in he_homework_phrases)
