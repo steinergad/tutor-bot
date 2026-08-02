@@ -245,6 +245,7 @@ def get_llm():
             model=os.getenv("OLLAMA_LLM_MODEL", "llama3.2"),
             base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
             temperature=0,
+            top_p=0.9,  # Improve response quality
         )
     from langchain_openai import ChatOpenAI
     # GitHub Models: OpenAI-compatible endpoint — uses your Copilot subscription
@@ -259,8 +260,8 @@ def get_llm():
         )
     return ChatOpenAI(model="gpt-4o-mini", temperature=0, streaming=True)
 
-@st.cache_resource
-def build_chain(hw_id: str, topic_context: str, disp_name: str = "") -> dict:
+@st.cache_resource(show_spinner=False)
+def build_chain(hw_id: str, topic_context: str, disp_name: str = "", language: str = "en") -> dict:
     """Builds LangChain pipeline using prompts from /prompts directory and metadata.json"""
     from langchain_core.output_parsers import StrOutputParser
     from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
@@ -288,7 +289,8 @@ def build_chain(hw_id: str, topic_context: str, disp_name: str = "") -> dict:
     sys_msg = build_tutorial_prompt(
         topics_list=topics_formatted,
         tutorial_label=tutorial_label,
-        topic_context=topic_context
+        topic_context=topic_context,
+        language=language
     )
 
     # Build the prompt template
@@ -369,7 +371,7 @@ def get_graph_context_for_homework(user_question: str, hw_key: str, kg) -> str:
 
 
 
-def build_homework_chain(hw_key: str, topics_covered: list, week_num: int, graph_context: str = "") -> dict:
+def build_homework_chain(hw_key: str, topics_covered: list, week_num: int, graph_context: str = "", language: str = "en") -> dict:
     """Builds LangChain pipeline for homework problem-solving using /prompts directory (Socratic method)"""
     from langchain_core.output_parsers import StrOutputParser
     from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
@@ -401,7 +403,8 @@ def build_homework_chain(hw_key: str, topics_covered: list, week_num: int, graph
         concepts_list=concepts_str,
         hw_title=hw_title,
         hw_description=hw_description,
-        key_concepts=key_concepts
+        key_concepts=key_concepts,
+        language=language
     )
     
     # Build the prompt template
@@ -718,9 +721,9 @@ if user_input := st.chat_input(placeholder):
         graph_ctx = ""
         if kg:
             graph_ctx = get_graph_context_for_homework(user_input, selected_hw, kg)
-        parts        = build_homework_chain(selected_hw, [], week_num, graph_ctx)
+        parts        = build_homework_chain(selected_hw, [], week_num, graph_ctx, current_lang)
     else:
-        parts        = build_chain(selected_hw, enhanced_context, disp_name)
+        parts        = build_chain(selected_hw, enhanced_context, disp_name, current_lang)
     
     llm          = parts["llm"]
     ans_prompt   = parts["answer_prompt"]
@@ -733,12 +736,20 @@ if user_input := st.chat_input(placeholder):
             input=user_input,
         )
         try:
-            # Stream token-by-token with cursor, then re-render with math fixed
+            # Show "thinking..." indicator while waiting for first token
             _slot  = st.empty()
+            _slot.markdown("🤔 *Thinking...*")
             _buf   = ""
+            _started = False
+            
+            # Stream token-by-token with cursor, then re-render with math fixed
             for _chunk in llm.stream(messages):
+                if not _started:
+                    _slot.empty()  # Clear "thinking..." on first token
+                    _started = True
                 _buf += _chunk.content
                 _slot.markdown(_buf + "\u258c")   # ▌ cursor while streaming
+            
             # Final render: convert \( \) and \[ \] to $ and $$ for KaTeX
             import re as _re
             _fixed = _re.sub(r"\\\[(.+?)\\\]", r"$$\1$$", _buf, flags=_re.DOTALL)

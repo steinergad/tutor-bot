@@ -32,7 +32,8 @@ def load_prompt_template(template_name: str) -> Dict[str, Any]:
 def build_tutorial_prompt(
     topics_list: str,
     tutorial_label: str,
-    topic_context: str = ""
+    topic_context: str = "",
+    language: str = "en"
 ) -> str:
     """
     Build complete system prompt for tutorial mode.
@@ -41,6 +42,7 @@ def build_tutorial_prompt(
         topics_list: Formatted list of allowed topics (newline-separated)
         tutorial_label: Display name for current tutorial
         topic_context: Optional course material reference
+        language: Language code ('en' for English, 'he' for Hebrew)
     
     Returns:
         Complete system message as string
@@ -48,8 +50,11 @@ def build_tutorial_prompt(
     template = load_prompt_template("tutorial_prompt")
     msg = template["system_message_template"]
     
+    # Language instruction - clear for Mistral
+    lang_header = ""  # Mistral works best in English; language selection disabled for quality
+    
     # Build the system message
-    sys_msg = (
+    sys_msg = lang_header + (
         f"{msg['role']}\n\n"
         f"The student has learned the following topics so far:\n\n"
         f"{topics_list}\n\n"
@@ -86,7 +91,8 @@ def build_homework_prompt(
     concepts_list: str,
     hw_title: str,
     hw_description: str = "",
-    key_concepts: str = ""
+    key_concepts: str = "",
+    language: str = "en"
 ) -> str:
     """
     Build complete system prompt for homework/Socratic mode.
@@ -98,6 +104,7 @@ def build_homework_prompt(
         concepts_list: Formatted list of learned concepts (newline-separated)
         hw_title: Title of homework assignment
         hw_description: Optional description of the problem
+        language: Language code ('en' for English, 'he' for Hebrew)
         key_concepts: Optional list of key concepts to focus on
     
     Returns:
@@ -106,8 +113,11 @@ def build_homework_prompt(
     template = load_prompt_template("homework_prompt")
     msg = template["system_message_template"]
     
+    # Mistral 7B works best in English; language selection disabled for response quality
+    lang_header = ""
+    
     # Build the system message
-    sys_msg = (
+    sys_msg = lang_header + (
         f"{msg['role']}\n\n"
         f"**CURRICULUM GROUNDING**: {msg['core_principle']}\n\n"
         f"The student has learned these concepts:\n{concepts_list}\n\n"

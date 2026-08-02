@@ -84,3 +84,30 @@ LANGUAGES = {
 def get_text(lang: str, key: str) -> str:
     """Get translated text for given language and key."""
     return LANGUAGES.get(lang, LANGUAGES["en"]).get(key, key)
+
+
+def detect_input_language(text: str) -> str:
+    """
+    Detect if input text contains Hebrew characters.
+    Returns 'he' if Hebrew detected, 'en' otherwise.
+    """
+    if not text:
+        return "en"
+    
+    # Hebrew Unicode range: U+0590 to U+05FF
+    hebrew_chars = 0
+    total_chars = 0
+    
+    for char in text:
+        # Count only letters and punctuation (not spaces/numbers)
+        if char.isalpha() or ord(char) >= 0x0590 and ord(char) <= 0x05FF:
+            total_chars += 1
+            # Check if character is in Hebrew Unicode range
+            if ord(char) >= 0x0590 and ord(char) <= 0x05FF:
+                hebrew_chars += 1
+    
+    # If more than 30% Hebrew characters, consider it Hebrew
+    if total_chars > 0 and hebrew_chars / total_chars > 0.3:
+        return "he"
+    
+    return "en"

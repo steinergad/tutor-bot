@@ -1,164 +1,93 @@
-# 🎓 Socratic Algorithm Tutor with Vector-Powered Search
+# 🎓 Tutor Bot - Local Socratic AI Tutoring System
 
-An intelligent tutoring system for teaching algorithms through the Socratic method, enhanced with semantic search to provide contextually relevant guidance.
+A **100% local Socratic tutoring chatbot** powered by Ollama + Mistral 7B. No cloud APIs, no internet required for inference. Students learn through guided questioning, not direct answers.
 
-**Version 2.0** — Now with vector database integration (F1=0.8 verified)
+**Version 3.0** — Production Ready | Ollama-powered | Privacy-first
 
 ---
 
 ## ✨ Key Features
 
-### 🔍 **Semantic Search (NEW!)**
-- **Vector Database**: Chroma with persistent embeddings
-- **Model**: sentence-transformers `all-MiniLM-L6-v2` (384-dim, 22MB)
-- **Accuracy**: F1=0.8 (80% on curriculum)
-- **Speed**: ~15ms per query
-- **Topics**: 336 algorithm topics indexed across 8 tutorials
-- **Fallback**: Automatic keyword search if unavailable
-
-### 📚 **Dual-Mode Learning**
-- **Learn Mode**: 8 algorithm tutorials with smart topic recommendations
-- **Homework Mode**: 5 weeks of assignments with Socratic guidance
-
-### 🤖 **Multi-LLM Support**
-- GitHub Copilot (recommended - free with subscription)
-- OpenAI (gpt-4o-mini)
-- Ollama (local models, privacy-first)
-
-### 💡 **Socratic Method**
-- Guides students with questions, not answers
-- Progressive hints based on curriculum level
-- Smart topic injection from vector search
+- **Socratic Method**: Asks guiding questions instead of giving answers
+- **Completely Local**: Runs entirely on your machine via Ollama + Mistral 7B
+- **Real-time Streaming**: Token-by-token response display with thinking indicator  
+- **Dual Learning Modes**:
+  - 📖 **Learn Mode**: Direct teaching with curriculum context
+  - 💪 **Homework Mode**: Socratic questions with scope validation
+- **Smart Context**: Knowledge graph + semantic vector search for relevant materials
+- **Production Ready**: Tested, documented, ready to deploy
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start (5 Minutes)
 
-### 1. Clone & Install
-```bash
-git clone https://github.com/steinergad/tutor-bot
+### Prerequisites
+- Python 3.11+
+- Ollama 0.6.2+ ([download](https://ollama.ai))
+- 8+ GB RAM (16+ GB recommended)
+
+### Step 1: Download Mistral Model
+```powershell
+# Install Ollama first, then:
+ollama pull mistral      # Downloads 4.4GB model
+ollama serve             # Start Ollama server (keep running)
+```
+
+### Step 2: Setup Python Environment
+```powershell
+git clone https://github.com/steinergad/tutor-bot.git
 cd tutor-bot
 python -m venv .venv
-.venv\Scripts\Activate.ps1    # Windows
-source .venv/bin/activate      # Mac/Linux
+.\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 ```
 
-### 2. Configure LLM
-```bash
-# Option A: GitHub Copilot (recommended)
-# Get token: https://github.com/settings/tokens → Generate token (classic)
-# Paste in sidebar after starting app
-
-# Option B: OpenAI
-export OPENAI_API_KEY=sk-proj-...
-
-# Option C: Ollama
-export LLM_PROVIDER=ollama
-export OLLAMA_LLM_MODEL=llama3.2
-```
-
-### 3. Build Vector Database (from your PDFs)
-```bash
-# Place PDFs in material/ directory first
-python extract_tutorials_pipeline.py     # Extract text from PDFs
-python -c "from vector_db import VectorDB; VectorDB().build_database('db/metadata.json')"
-```
-
-📖 **Full guide:** See [VECTOR_DB_SETUP.md](VECTOR_DB_SETUP.md) for detailed instructions
-
-### 4. Run
-```bash
+### Step 3: Run
+```powershell
 streamlit run app.py
 # Opens http://localhost:8501
-# Vector DB loads automatically (~3-5 seconds)
 ```
+
+That's it! No API keys, no configuration needed.
 
 ---
 
-## 📚 For Your Team: Important Guides
+## 🏗️ System Architecture
 
-### ⭐ NEW: How to Build the Vector Database
-→ **[VECTOR_DB_SETUP.md](VECTOR_DB_SETUP.md)** 
-- Step-by-step PDF extraction
-- Metadata generation
-- Database construction
-- Troubleshooting guide
-- **Deployment checklist for team members**
-
-### ⭐ NEW: Embedding Model Comparison
-→ **[MODEL_COMPARISON.md](MODEL_COMPARISON.md)**
-- Analysis of current model (all-MiniLM-L6-v2)
-- Why we chose it (speed + accuracy tradeoff)
-- Comparison with alternatives (all-mpnet, e5-large)
-- Google NotebookLM architecture explained
-- Open-Notebook vs your approach
-- Upgrade paths & recommendations
-
-### Other Documentation
-→ **[DOCUMENTATION.md](DOCUMENTATION.md)** — Complete documentation index
-
----
-
-## 🔍 How Vector Search Works
-
-### The Problem
-Student asks: "How does sorting work?"
-
-**Without vector search (keyword only)**:
-- Looks for exact matches: "sorting" in topics
-- Misses related concepts
-- F1 score: 0.025 (very poor)
-
-**With vector search**:
-- Understands semantic meaning
-- Finds: "Merge Sort", "Algorithm Complexity", "Divide and Conquer"
-- F1 score: 0.034 (+37% improvement)
-
-### Example Flow
-```python
-# 1. Student asks
-question = "How does sorting work?"
-
-# 2. Vector DB searches semantically
-from search_integration import find_relevant_topics
-topics = find_relevant_topics(question, top_k=3)
-# Returns: [("Merge Sort", 0.92), 
-#           ("Algorithm Complexity", 0.88),
-#           ("Divide and Conquer", 0.85)]
-
-# 3. Topics injected into LLM prompt
-system_prompt += "[Related topics: Merge Sort, Algorithm Complexity...]"
-
-# 4. LLM provides better response
-tutor_response = "Sorting is a fundamental operation..."
+```
+Streamlit UI (http://localhost:8501)
+    ↓
+User Input → Language Processing → Context Retrieval
+    ↓
+┌──────────────────────────────────────┐
+│ Context Sources:                      │
+├─ Knowledge Graph (SQLite)            │
+│  └─ Curriculum entities & relations  │
+├─ Vector Search (Chroma)              │
+│  └─ Semantic search on course topics │
+├─ Validation (Scope checker)          │
+│  └─ Ensure question is on-topic      │
+└──────────────────────────────────────┘
+    ↓
+LangChain → Prompt Building → Message Formatting
+    ↓
+Ollama (Mistral 7B) → LLM Inference
+    ↓
+Stream Response ← Token by Token ← Real-time Display
+    ↓
+Chat History + Math Formatting (KaTeX)
 ```
 
----
+### Technology Stack
 
-## 📊 Performance Metrics
-
-### Vector Search Benchmark
-```
-Model:          all-MiniLM-L6-v2
-Test Set:       10 algorithm questions
-────────────────────────────────
-F1 Score:       0.8000 (80%)
-Accuracy:       8/10 correct
-Latency:        ~15ms/query
-Precision:      0.8000
-Recall:         0.8000
-────────────────────────────────
-Status:         ✅ Production Ready
-```
-
-### Why No Fine-Tuning?
-The baseline model already achieves excellent performance:
-- **F1=0.8** is great for this task
-- Fine-tuning would need >15% improvement to justify
-- Small training data (30 examples) would overfit
-- Pre-trained model optimized for general semantic search
-- **Decision**: Keep production-ready baseline
+| Component | Tech | Role |
+|-----------|------|------|
+| **LLM Engine** | Ollama + Mistral 7B | Local inference, no APIs |
+| **Web UI** | Streamlit 1.59.1 | Interactive chat interface |
+| **Orchestration** | LangChain 1.3+ | Prompt chains & templating |
+| **Knowledge Graph** | SQLite | Curriculum relationships |
+| **Vector DB** | Chroma | Semantic search |
+| **Embeddings** | all-MiniLM-L6-v2 | Text vectorization |
 
 ---
 
@@ -166,260 +95,310 @@ The baseline model already achieves excellent performance:
 
 ```
 tutor-bot/
-├── app.py                           # Main Streamlit app (700+ lines)
-├── vector_db.py                     # Vector DB implementation (296 lines) ⭐
-├── search_integration.py            # Unified search API (142 lines) ⭐
-├── extract_homework.py              # Homework PDF extraction
-├── test_search_comparison.py        # Benchmark tests (F1=0.8 verified)
+├── app.py                          # Main Streamlit app (850+ lines)
+├── requirements.txt                # Dependencies
+├── .env.example                    # Config template
 │
-├── db/
-│   ├── metadata.json                # 336 algorithm topics (8 tutorials)
-│   ├── homework.json                # 5 weeks assignments
-│   └── chroma_vector_store/         # Vector embeddings (auto-generated, 50MB)
+├── 📂 prompts/
+│   ├── prompt_builder.py          # Generates system prompts
+│   ├── tutorial_prompt.json       # Learn mode template
+│   └── homework_prompt.json       # Homework mode template
 │
-├── requirements.txt                 # 9 dependencies (verified)
-├── .env.example                     # Configuration template
-├── .gitignore                       # Excludes .venv, vector store
+├── 📂 Core Modules
+│   ├── language_config.py         # UI translations
+│   ├── homework_validation.py     # Scope validation
+│   ├── search_integration.py      # Search API
+│   ├── vector_db.py              # Vector database
+│   └── graph_rag_starter.py      # Knowledge graph
 │
-└── Documentation
-    ├── README.md                    # This file
-    ├── VECTOR_DB_IMPLEMENTATION.md  # Technical deep-dive
-    ├── VECTOR_DB_SUMMARY.md         # Implementation summary
-    └── START_HERE.md                # Getting started
-
-⭐ = New in v2.0 (Vector DB integration)
+├── 📂 db/
+│   ├── metadata.json             # 336 course topics
+│   ├── homework.json             # 5 assignments
+│   ├── knowledge_graph.db        # SQLite graph
+│   └── chroma_vector_store/      # Vector embeddings
+│
+└── 📂 material/
+    ├── english/                  # Course PDFs
+    ├── lectures/
+    └── hw1/
 ```
 
 ---
 
-## 🏗️ System Architecture
+## 🎯 How It Works
 
+### Learn Mode Flow
 ```
-┌─────────────────────────────────┐
-│   Student Question (Chat UI)    │
-└──────────────┬──────────────────┘
-               │
-        ┌──────▼──────────┐
-        │ search_integration.py
-        │ (Unified API)
-        └──┬──────────────┬──┐
-           │              │  │
-      ┌────▼───┐    ┌────▼──┴─────┐
-      │ Vector │    │   Fallback  │
-      │   DB   │    │   Keyword   │
-      │ (Chroma)    │   Search    │
-      └────┬───┘    └────┬────────┘
-           │             │
-           └─────┬───────┘
-                 │
-        ┌────────▼──────────┐
-        │  Related Topics   │
-        │  (F1=0.8, Top-3)  │
-        └────────┬──────────┘
-                 │
-        ┌────────▼──────────┐
-        │  Inject into      │
-        │  System Prompt    │
-        └────────┬──────────┘
-                 │
-        ┌────────▼──────────┐
-        │  LLM (Copilot/    │
-        │   OpenAI/Ollama)  │
-        └────────┬──────────┘
-                 │
-        ┌────────▼──────────┐
-        │  Socratic Response│
-        │  (better informed)│
-        └───────────────────┘
+Student: "Explain Big O notation"
+    ↓
+App retrieves: Tutorial 1 topics, related algorithms
+    ↓
+LLM generates: Clear explanation with examples
+    ↓
+Response: Tutorial-aware, references learned concepts
 ```
 
----
-
-## 🧪 Testing & Validation
-
-### Run Benchmark Tests
-```bash
-python test_search_comparison.py
-
-# Output:
-# ======================================================================
-# Baseline: F1=0.8000 (80%)
-# Accuracy: 8/10 test questions
-# Latency: ~15ms per query
-# ======================================================================
+### Homework Mode Flow
 ```
-
-### Test Coverage
-- 10 algorithm questions (basic to advanced)
-- Expected topics pre-labeled
-- Compares vector vs keyword search
-- Metrics: F1, precision, recall, latency
-- Results saved to `test_results.json`
-
----
-
-## 📚 Curriculum Content
-
-### Indexed Topics (336 total)
-- **Tutorial 1**: Algorithm Analysis (18 topics)
-  - Asymptotic Notation, Big O, Time Complexity, Complexity Analysis, etc.
-- **Tutorial 2**: Divide & Conquer (22 topics)
-  - Merge Sort, Recursion, Master Theorem, etc.
-- **Tutorial 3**: Dynamic Programming (20 topics)
-  - Memoization, Overlapping Subproblems, Optimal Substructure, etc.
-- **Tutorials 4-8**: Graph algorithms, NP-completeness, advanced topics
-
-### Topics Are Cumulative
-- Tutorial 1: 18 topics learned
-- Tutorial 2: 18 + 22 = 40 topics known
-- Tutorial 8: 336 topics available
+Student: "How do I find the time complexity?"
+    ↓
+App checks: Is this question about current homework?
+    ↓
+LLM generates: Socratic questions to guide discovery
+    ↓
+Response: "What operations happen each time we loop?"
+          "How many times do we loop through n elements?"
+```
 
 ---
 
 ## ⚙️ Configuration
 
-### Environment Variables (.env)
-```bash
-# LLM Selection
-LLM_PROVIDER=openai                    # or 'ollama'
-OPENAI_API_KEY=sk-proj-...             # For OpenAI
-GITHUB_TOKEN=github_pat_...            # For GitHub Copilot
+### Environment File (.env)
+```env
+# Ollama Configuration
+LLM_PROVIDER=ollama
 OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_LLM_MODEL=llama3.2
+OLLAMA_LLM_MODEL=mistral
 
-# Vector DB (auto-managed)
-CHROMA_DB_PATH=db/chroma_vector_store
+# Optional: If you want to switch to a different model later
+# OLLAMA_LLM_MODEL=neural-chat    (4GB, faster)
+# OLLAMA_LLM_MODEL=phi             (2.6GB, smallest)
 ```
 
-### Streamlit Settings
-- Sidebar: Dark admin panel (API key configuration)
-- Main area: Clean tutoring interface
-- Responsive: Works on desktop and tablet
-- Auto CSS: KaTeX math rendering
+### Changing Models
+```powershell
+# Download new model
+ollama pull neural-chat
+
+# Update .env
+OLLAMA_LLM_MODEL=neural-chat
+
+# Restart app
+streamlit run app.py
+```
 
 ---
 
-## 🚀 Deployment
+## 🎮 Usage Examples
 
-### Production Checklist
-- ✅ Vector DB indexed and tested (F1=0.8)
-- ✅ Fallback search working
-- ✅ Error handling comprehensive
-- ✅ All dependencies verified
-- ✅ Documentation complete
-- ✅ No hardcoded secrets
-- ✅ .gitignore properly configured
+### Example 1: Learn Mode
+```
+User: "What is time complexity?"
 
-### Deploy to Streamlit Cloud
-```bash
-# 1. Push to GitHub
-git push origin main
+Tutor: "Great question! Time complexity tells us how long an algorithm 
+takes to run as the input size grows.
 
-# 2. Visit https://share.streamlit.io
-# 3. Connect your repo
-# 4. Vector DB builds on first deployment (~2 seconds)
+From Tutorial 1, we learned Big O notation helps us analyze this:
+- O(n): Linear - looks at each element once
+- O(n²): Quadratic - nested loops
+- O(log n): Logarithmic - divide and conquer
+
+Can you think of an algorithm that looks at each element once?"
 ```
 
-### Deploy to Heroku
-```bash
-heroku login
-heroku create your-tutor-bot
-git push heroku main
+### Example 2: Homework Mode  
+```
+User: "How do I find maximum in an array?"
+
+Tutor: "Good question! Let me guide you step by step.
+
+From Tutorial 1, we learned about basic operations. 
+For finding a maximum, think:
+1. Do we need to look at EVERY element in the array?
+2. How many times do we compare values?
+
+What do you think the time complexity would be?"
 ```
 
-### Local Production
+---
+
+## 🔧 Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| **"Connection refused"** | Make sure `ollama serve` is running in background |
+| **"Module not found"** | Run `pip install -r requirements.txt` |
+| **Slow responses (>15s)** | Normal for Mistral on CPU. Try smaller model: `neural-chat` |
+| **App won't start** | Kill any old processes: `taskkill /F /IM streamlit.exe` |
+| **Knowledge graph not loading** | Run `python build_knowledge_graph.py` |
+
+---
+
+## 📊 Performance
+
+| Metric | Value |
+|--------|-------|
+| **First Response** | 6-8 seconds (Mistral 7B, CPU) |
+| **Generation Speed** | ~10-15 tokens/sec |
+| **Memory Usage** | 4-6 GB (with Mistral loaded) |
+| **Vector Search** | ~50-100ms per query |
+
+**Tips for Better Performance**:
+- Use SSD for faster DB access
+- Enable GPU in Ollama: `CUDA_VISIBLE_DEVICES=0 ollama serve`
+- Switch to smaller model (`neural-chat`, `phi`)
+
+---
+
+## 🔀 Model Options
+
+### Mistral 7B (Current)
+- ✅ Best quality responses
+- ✅ 4.4 GB  
+- ⏱️ 6-8 seconds latency (CPU)
+- 📊 Handles English fluently
+
+### Alternatives
 ```bash
-streamlit run app.py \
-  --logger.level=error \
-  --client.showErrorDetails=false \
-  --server.headless=true
+# Faster, smaller, still good
+ollama pull neural-chat      # 4GB, 5-6s latency
+
+# Extremely small/fast
+ollama pull phi              # 2.6GB, 3-4s latency
+
+# Context-heavy tasks
+ollama pull llama2           # 7GB, longer context
 ```
+
+**To switch**: Edit `.env` → `OLLAMA_LLM_MODEL=neural-chat` → Restart app
+
+---
+
+## 📚 Adding Course Materials
+
+### Add New PDFs
+```
+1. Place PDF files in material/english/ or material/lectures/
+2. Run: python extract_tutorials_pipeline.py
+3. Restart the app
+```
+
+### Manual Metadata Update
+Edit `db/metadata.json` to add topics:
+```json
+{
+  "tutorial_1": {
+    "topics": ["Big O", "Time Complexity", "Algorithm Analysis"]
+  }
+}
+```
+
+Rebuild knowledge graph:
+```powershell
+python build_knowledge_graph.py
+```
+
+---
+
+## 🔐 Security & Privacy
+
+✅ **Completely Local**: All processing on your machine  
+✅ **No Internet**: No data sent anywhere for inference  
+✅ **No Accounts**: No login, no tracking  
+✅ **No APIs**: No API keys required  
+✅ **Data Stays Local**: Chat history only in Streamlit session  
+
+---
+
+## 📋 System Requirements
+
+| Item | Minimum | Recommended |
+|------|---------|-------------|
+| **Python** | 3.11 | 3.11+ |
+| **RAM** | 8 GB | 16+ GB |
+| **Disk** | 500 MB | 1 GB (includes models) |
+| **CPU** | Any | Ryzen/Intel current gen |
+| **GPU** | N/A | NVIDIA/AMD (10x speedup) |
+
+**Ollama Resources**:
+- Mistral 7B: ~4.4 GB
+- Vector embeddings: ~80 MB  
+- SQLite databases: ~100 MB
+- Total: ~5 GB
 
 ---
 
 ## 📦 Dependencies
 
-All in `requirements.txt`:
+All production dependencies in `requirements.txt`:
 ```
-streamlit>=1.40          # Web UI
-langchain>=0.3           # LLM orchestration
-langchain-openai>=0.2    # OpenAI integration
-langchain-chroma>=0.4    # Chroma integration
-chromadb>=0.5.0          # Vector database
-sentence-transformers>=2.2.0  # Embeddings
-python-dotenv>=1.0       # Environment config
-pypdf>=4.0               # PDF processing
-langchain-ollama>=0.2    # Local LLMs
+streamlit>=1.59.1
+langchain>=1.3
+langchain-core>=1.4.9
+langchain-ollama>=1.1.0
+chromadb>=0.5.0
+sentence-transformers>=2.2.0
+python-dotenv>=1.0
 ```
 
----
-
-## 🔗 Related Documentation
-
-- **[VECTOR_DB_IMPLEMENTATION.md](VECTOR_DB_IMPLEMENTATION.md)** — Technical architecture, performance analysis, troubleshooting
-- **[VECTOR_DB_SUMMARY.md](VECTOR_DB_SUMMARY.md)** — Implementation summary, deployment checklist
-- **[search_integration.py](search_integration.py)** — Unified search API reference
+Install: `pip install -r requirements.txt`
 
 ---
 
-## ❓ FAQ
+## 🧪 Testing
 
-**Q: Why semantic search instead of just keywords?**
-A: Keywords only match exact text. Semantic search understands meaning:
-- "sorting algorithm" matches "Merge Sort" conceptually
-- Finds related topics the student doesn't know to ask about
-- 37% better (F1: 0.025→0.034)
+```powershell
+# Test Ollama connection
+python test_ollama_api.py
 
-**Q: Does it work offline?**
-A: Yes! Chroma stores embeddings locally. No cloud APIs for search.
-Requires GitHub Copilot, OpenAI, or local Ollama for LLM only.
+# Rebuild knowledge graph
+python build_knowledge_graph.py
 
-**Q: How much disk space?**
-A: ~500MB total
-- Code: ~5MB
-- Vector store: ~50MB
-- Dependencies: ~400MB
-
-**Q: Can I add more tutorials?**
-A: Yes! Add PDF to `tutorials/` folder, run extraction pipeline,
-and metadata.json auto-updates. Vector DB rebuilds on app restart.
-
-**Q: What if vector DB fails?**
-A: Automatic fallback to keyword search (slower but works).
-App stays functional, just with degraded search quality.
+# Full system test
+python test_full_system.py
+```
 
 ---
 
-## 📊 System Requirements
+## 🚀 Deployment
 
-| Component | Requirement |
-|-----------|-------------|
-| Python | 3.11+ |
-| RAM | 512MB minimum (1GB recommended) |
-| Disk | ~500MB (includes vector store) |
-| Network | Internet for LLM (local Ollama is offline) |
-| Browser | Modern browser (Chrome, Firefox, Safari) |
-| Setup Time | ~5 minutes |
+### Local Machine
+```powershell
+streamlit run app.py
+```
+
+### Windows Background Service
+```powershell
+# Create batch file: start_tutor.bat
+@echo off
+cd C:\path\to\tutor-bot
+.venv\Scripts\activate.bat
+streamlit run app.py --server.headless true
+```
+
+### Production Considerations
+- ✅ Runs offline (no internet needed)
+- ✅ Single machine deployment
+- ✅ No database sync needed
+- ⚠️ UI only: Can't share without running separate instances
 
 ---
 
-## 📄 License
+## 📝 License
 
 MIT License - Free for educational and commercial use
 
 ---
 
-## ✅ Status & Version
+## ✅ Status
 
 ```
-Current Version:        2.0.0 (Vector DB Integrated)
-Release Date:           2026-07-13
-Status:                 ✅ Production Ready
-Latest Commit:          18cf0741
-Vector DB Status:       ✅ F1=0.8 (80% accuracy verified)
-GitHub Repo:            https://github.com/steinergad/tutor-bot
+Version:        3.0.0
+Status:         ✅ Production Ready
+Last Updated:   2026-08-02
+LLM:            Mistral 7B via Ollama
+Python:         3.11.9
 ```
 
 ---
 
-**Ready to teach algorithms with AI-powered guidance! 🎓**
+## 🤝 Support
+
+- **Ollama Issues**: https://github.com/ollama/ollama
+- **Streamlit Help**: https://docs.streamlit.io
+- **LangChain Docs**: https://docs.langchain.com
+
+---
+
+**Happy Learning! 🚀**
